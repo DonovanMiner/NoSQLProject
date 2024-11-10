@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     
     #dev'd apps
     "Dashboard.apps.DashboardConfig",
+    "Landing.apps.LandingConfig"
 ]
 
 MIDDLEWARE = [
