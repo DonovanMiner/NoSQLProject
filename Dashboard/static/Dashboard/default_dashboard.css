@@ -3,10 +3,10 @@
 .HeaderDiv {
     position: relative;
     width: calc(100% - 40px);
-    height: fit-content;
+    height: 250px;
     display: inline-block;
     background: orange;
-    padding-top: 20px; 
+    padding-top: 20px;
     padding-bottom: 20px;
     padding-left: 50px;
     padding-right: 50px;
@@ -16,7 +16,6 @@
     box-sizing: border-box;
     align-self: center;
 }
-
 
 .LinkBar {
     position: relative;
@@ -41,7 +40,6 @@
 
 
 .BodyDiv {
-
     position: relative;
     width: calc(100% - 40px);
     height: 600px;
@@ -84,7 +82,4 @@ p {
 
 
 body {
-
-
-
 }

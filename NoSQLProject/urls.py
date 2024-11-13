@@ -20,10 +20,10 @@ from django.urls import include, path
 from Landing.views import home
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    #path("admin/", admin.site.urls),
     
-    path('', home, name='home')
+    path('', home, name='home'),
 
-    #path('Home/', include('Landing.urls'), name='landing')
-    #path("") user/Dashboard?
+    #path('Home/', include('Landing.urls'), name='landing'),
+    path("Dashboard/", include('Dashboard.urls'), name='dashboard'),
 ]

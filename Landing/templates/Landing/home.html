@@ -13,19 +13,28 @@
 
     <div class="HeaderDiv">
         <h1>StriveOn</h1>
+        <h2>Rnnng: Taking the UI Out of Running</h2>
+        <h3>Login</h3>
+        <!--create input form here, on submission, link to user dash, either match user or exception-->
 
-        <h2>Login</h2>
-        <h3>Username:</h3>
-        <h3>Password:</h3>
+        <form method="post" action="{% url 'Dashboard:user_dash' %}">
+            {% csrf_token %}
+            <label for="username">Username:</label> <label/> <br />
+            <input id="username" name="username" type="text" placeholder="Username"  value="user_1"/> <br />
+
+            <label for="password">Password:</label> <br />
+            <input id="password" name="password" type="text" placeholder="Password" value="pwd"/> <br />
+
+            <input type="submit" value="Submit" />
+
+        </form>
     </div>
     
     
     
     <div class="LinkBar">
-        <p>place to put links to rest of site</p>
-        <p>link</p>
-        <p>link</p>
-        <p>link</p>
+        <a href="{% url 'home' %}">Home</a> &emsp;
+        <a href="{% url 'Dashboard:default_dash' %}">Demo Dashboard</a>
     </div>
 
 
