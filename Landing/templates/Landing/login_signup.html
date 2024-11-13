@@ -4,26 +4,35 @@
     <meta charset="utf-8" />
     {% load static %}
     <link rel="stylesheet" href="{% static 'Landing/Landing.css' %}" />
-    <title>How It Works</title>
+    <title>Login / Sign-up</title>
 </head>
 <body>
 
     <div class="HeaderDiv">
-        <h1>StriveOn - How It Works</h1>
+        <h1>StriveOn - Login / Sign Up</h1>
     </div>
 
     <div class="LinkBar">
         <p><a href="{% url 'home' %}">Home</a></p>
         <p><a href="{% url 'workouts' %}">Workouts</a></p>
-        <p><a href="{% url 'login_signup' %}">Login/Sign Up</a></p>
+        <p><a href="{% url 'how_it_works' %}">How It Works</a></p>
     </div>
 
+    #Check this later, it was something i grab from google
     <div class="BodyDiv">
-        <h1>How StriveOn Works</h1>
-        <p>Learn how to track your workouts and progress with StriveOn...</p>
-        #Edit when we have this...
+        <h1>Login to Your Account</h1>
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required />
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
     </div>
 
 </body>
 </html>
+
 
