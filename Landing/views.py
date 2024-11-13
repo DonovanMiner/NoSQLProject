@@ -14,19 +14,21 @@ def home(request):
 def workouts(request):
     workout_data = user_fitness_data.find().limit(10)
     context = {'workout_data': workout_data}
-    return Httpresponse(render(request, 'landing/workouts.html', context)
+    return HttpResponse(render(request, 'landing/workouts.html', context)
 
 # how it works page view
 def how_it_works(request):
-    return Httpresponse(render(request, 'landing/how_it_works.html', context)
+    context = {} #going to be defined later since it will not use data
+    return HttpResponse(render(request, 'landing/how_it_works.html', context)
 
 # login/sign-up page view
 def login_signup(request):
-    return Httpresponse(render(request, 'landing/login_signup.html', context)
+    context = {} #this will be empty until we find out how to authenticate users and stuff.
+    return HttpResponse(render(request, 'landing/login_signup.html', context)
 
 ## After login request (dashboard view)
-def dashboard(request)
+def dashboard(request):
     user_name = request.user.first_name
     progress = {"completed_goals": 3, "total_goals": 5}
     context = {"user_name": user_name, "progress": progress}
-    return Httpresponse(render(request, 'landing/dashboard/html', context)
+    return HttpResponse(render(request, 'landing/dashboard.html', context)
