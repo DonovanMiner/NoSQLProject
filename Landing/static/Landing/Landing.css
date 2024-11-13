@@ -1,0 +1,90 @@
+﻿
+
+.HeaderDiv {
+    position: relative;
+    width: calc(100% - 40px);
+    height: 250px;
+    display: inline-block;
+    background: orange;
+    padding-top: 20px; 
+    padding-bottom: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+    margin: 20px;
+    /*vertical-align: central;*/
+    /*align-content: center;*/
+    box-sizing: border-box;
+    align-self: center;
+}
+
+
+.LinkBar {
+    position: relative;
+    width: calc(100% - 40px);
+    height: 100px;
+    display: inline-block;
+    background: black;
+    padding: 35px 60px;
+    margin-left: 20px;
+    margin-right: 20px;
+    box-sizing: border-box;
+    align-self: center;
+}
+
+    .LinkBar p {
+        font-family: 'Times New Roman', Times, serif;
+        color: floralwhite;
+        font-size: 20px;
+        display: inline;
+        vertical-align: central;
+    }
+
+
+.BodyDiv {
+
+    position: relative;
+    width: calc(100% - 40px);
+    height: 600px;
+    display: inline-block;
+    background: grey;
+    padding: 20px 30px;
+    margin: 20px;
+    box-sizing: border-box;
+    align-self: center;
+}
+
+
+
+h1 {
+    color: black;
+    font-family: serif;
+    font-size: 30px;
+}
+
+h2 {
+    color: black;
+    font-family: serif;
+    font-size: 24px;
+}
+
+h3 {
+    color: black;
+    font-family: serif;
+    font-size: 18px;
+}
+
+
+p {
+    color: black;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+
+body {
+
+
+
+}

@@ -3,15 +3,38 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Landing/Landing.css' %}" />
+
     <title>Fitness Home Page</title>
 </head>
 <body>
 
-    <h1>Site Landing</h1>
+    <div class="HeaderDiv">
+        <h1>StriveOn</h1>
 
-    {% for data in res %}
-        <p>{{data.user_id}} {{data.workout_type}}</p>
-    {% endfor %}
+        <h2>Login</h2>
+        <h3>Username:</h3>
+        <h3>Password:</h3>
+    </div>
+    
+    
+    
+    <div class="LinkBar">
+        <p>place to put links to rest of site</p>
+        <p>link</p>
+        <p>link</p>
+        <p>link</p>
+    </div>
+
+
+    <div class="BodyDiv">
+        <h1>Website Description and Info Before Login</h1>
+        <p>Blah Blah Go Workout and Look at Graphs Blah Blah</p>
+    </div>
+
+
 
 
 </body>
