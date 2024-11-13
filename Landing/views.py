@@ -27,8 +27,12 @@ def login_signup(request):
     return render(request, 'landing/login_signup.html', context)
 
 ## After login request (dashboard view)
+# Needs to be configured with the actual attributes of the database related to the users collection.
+
 def dashboard(request):
-    user_name = request.user.first_name
-    progress = {"completed_goals": 3, "total_goals": 5}
-    context = {"user_name": user_name, "progress": progress}
+    user_name = request.user.first_name  # Get the logged-in user's first name
+    # Assuming user has an associated fitness record (you can filter by user id or another field)
+    user_progress = user_fitness_data.find_one({'user_id': request.user.id})  # Adjust query as needed
+    progress = user_progress.get('progress', {'completed_goals': 0, 'total_goals': 0})
+    context = {'user_name': user_name, 'progress': progress}
     return render(request, 'landing/dashboard.html', context)
