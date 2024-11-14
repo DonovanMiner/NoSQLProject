@@ -25,8 +25,7 @@ SECRET_KEY = "django-insecure-b^op-j(n4f=z%cboe@7t&4@new%n*8ku4b_r*#a0@29t@ym%ee
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -78,14 +77,13 @@ WSGI_APPLICATION = "NoSQLProject.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 #MongoDB references in root/utils.py
-#DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR / "db.sqlite3",
-    # }
-    
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',  
+        'NAME': BASE_DIR / 'db.sqlite3',         
+    }
+}
 
-#}
 
 
 # Password validation
