@@ -17,13 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from Landing.views import home
+from Landing.views import home, workouts, how_it_works,login_signup, dashboard
+
+app_name = 'Landing'
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    
-    path('', home, name='home')
-
-    #path('Home/', include('Landing.urls'), name='landing')
-    #path("") user/Dashboard?
+    path('', views.home, name='home'), 
+    path('workouts/', views.workouts, name='workouts'),
+    path('how-it-works/', views.how_it_works, name='how_it_works'),
+    path('login-signup/', views.login_signup, name='login_signup'),
+    path('dashboard/', views.dashboard, name='dashboard'),  
 ]
