@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿{% load static %}
+<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -21,9 +22,9 @@
 
     <div class="LinkBar">
         <p>Links to other pages:</p>
-        <p><a href="{% url 'workouts' %}">Workouts</a></p>
-        <p><a href="{% url 'how_it_works' %}">How It Works</a></p>
-        <p><a href="{% url 'login_signup' %}">Sign Up</a></p>
+        <p><a href="{% url 'Landing:workouts' %}">Workouts</a></p>
+        <p><a href="{% url 'Landing:how_it_works' %}">How It Works</a></p>
+        <p><a href="{% url 'Landing:login_signup' %}">Sign Up</a></p>
     </div>
 
     <div class="BodyDiv">

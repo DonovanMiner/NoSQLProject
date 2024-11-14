@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,15 +13,15 @@
     </div>
 
     <div class="LinkBar">
-        <p><a href="{% url 'home' %}">Home</a></p>
-        <p><a href="{% url 'workouts' %}">Workouts</a></p>
-        <p><a href="{% url 'how_it_works' %}">How It Works</a></p>
+        <p><a href="{% url 'Landing:home' %}">Home</a></p>
+        <p><a href="{% url 'Landing:workouts' %}">Workouts</a></p>
+        <p><a href="{% url 'Landing:how_it_works' %}">How It Works</a></p>
     </div>
 
-    #Check this later, it was something i grab from google
     <div class="BodyDiv">
         <h1>Login to Your Account</h1>
-        <form method="POST" action="{% url 'login' %}">
+        <!-- Update this later -->
+        <form method="POST" action="{% url 'Landing:login_signup' %}">
             {% csrf_token %}
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required />
@@ -28,10 +29,9 @@
             <input type="password" id="password" name="password" required />
             <button type="submit">Login</button>
         </form>
-        <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+        <p>Don't have an account? <a href="{% url 'Landing:login_signup' %}">Sign up here</a></p>
     </div>
 
 </body>
 </html>
-
 
