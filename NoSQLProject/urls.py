@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('Landing.urls'))
+    #path('admin/', admin.site.urls), #we should not unhash this??
+    path('', include('Landing.urls')) #I put the '' instead of the 'Landing' because i'd this will be the main page
+    path('Dashboard', include('Dashboard.urls')) # This is for any request inside the dashboard app stays on that specific app and do not overwrite the root URL
 ]
