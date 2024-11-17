@@ -27,11 +27,11 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required />
 
-            <button type="submit">Login</button>
+            <button type="submit" name="action" value="login">Login</button>
         </form>
 
         <h1>Don't have an account? Sign Up</h1>
-        <form method="POST" action="{% url 'Landing:login_signup' %}"></form>
+        <form method="POST" action="{% url 'Landing:login_signup' %}">
             {% csrf_token %}
             <label for="new_username">Choose a Username:</label>
             <input type="text" id="new_username" name="new_username" required />
