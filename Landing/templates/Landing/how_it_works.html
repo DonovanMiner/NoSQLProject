@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{% static 'Landing/Landing.css' %}" />
+    <title>How It Works</title>
+</head>
+<body>
+
+    <div class="HeaderDiv">
+        <h1>StriveOn - How It Works</h1>
+    </div>
+
+    <div class="LinkBar">
+        <p><a href="{% url 'Landing:home' %}">Home</a></p>
+        <p><a href="{% url 'Landing:login_signup' %}">Login/Sign Up</a></p>
+    </div>
+
+    <div class="BodyDiv">
+        <h1>How StriveOn Works?</h1>
+        <p>Learn how to track your workouts and progress with StriveOn...</p>
+        #Edit when we have this...
+    </div>
+
+</body>
+</html>

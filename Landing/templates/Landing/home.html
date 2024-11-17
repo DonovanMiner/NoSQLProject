@@ -1,50 +1,30 @@
-﻿<!DOCTYPE html>
-
+﻿﻿{% load static %}
+<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="utf-8" />
-
-    {% load static %}
     <link rel="stylesheet" href="{% static 'Landing/Landing.css' %}" />
-
     <title>Fitness Home Page</title>
+
 </head>
 <body>
 
     <div class="HeaderDiv">
         <h1>StriveOn</h1>
-        <h2>Rnnng: Taking the UI Out of Running</h2>
-        <h3>Login</h3>
-        <!--create input form here, on submission, link to user dash, either match user or exception-->
-
-        <form method="post" action="{% url 'Dashboard:user_dash' %}">
-            {% csrf_token %}
-            <label for="username">Username:</label> <label/> <br />
-            <input id="username" name="username" type="text" placeholder="Username"  value="user_1"/> <br />
-
-            <label for="password">Password:</label> <br />
-            <input id="password" name="password" type="text" placeholder="Password" value="pwd"/> <br />
-
-            <input type="submit" value="Submit" />
-
-        </form>
+        <h2>Login</h2>
     </div>
-    
-    
-    
+
     <div class="LinkBar">
-        <a href="{% url 'home' %}">Home</a> &emsp;
-        <a href="{% url 'Dashboard:default_dash' %}">Demo Dashboard</a>
+        <p>Links to other pages:</p>
+        <p><a href="{% url 'Landing:how_it_works' %}">How It Works</a></p>
+        <p><a href="{% url 'Landing:login_signup' %}">Login/Sign Up</a></p>
     </div>
-
 
     <div class="BodyDiv">
         <h1>Website Description and Info Before Login</h1>
-        <p>Blah Blah Go Workout and Look at Graphs Blah Blah</p>
+        <p>Welcome to StriveOn. Get started on your fitness journey today!</p>
     </div>
-
-
-
 
 </body>
 </html>

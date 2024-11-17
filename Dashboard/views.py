@@ -1,10 +1,6 @@
-from cgitb import text
-from turtle import title
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
-from numpy import kaiser
-from plotly.graph_objs import XAxis
 
 from NoSQLProject.utils import user_fitness_data, users
 

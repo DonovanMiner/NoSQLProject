@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{% static 'Landing/Landing.css' %}" />
+    <title>Login / Sign-up</title>
+</head>
+<body>
+
+    <div class="HeaderDiv">
+        <h1>StriveOn - Login / Sign Up</h1>
+    </div>
+
+    <div class="LinkBar">
+        <p><a href="{% url 'Landing:home' %}">Home</a></p>
+        <p><a href="{% url 'Landing:how_it_works' %}">How It Works</a></p>
+    </div>
+
+    <div class="BodyDiv">
+        <h1>Login to Your Account</h1>
+        <form method="POST" action="{% url 'Landing:login_signup' %}">
+            {% csrf_token %}
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required />
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+
+            <button type="submit" name="action" value="login">Login</button>
+        </form>
+
+        <h1>Don't have an account? Sign Up</h1>
+        <form method="POST" action="{% url 'Landing:login_signup' %}">
+            {% csrf_token %}
+            <label for="new_username">Choose a Username:</label>
+            <input type="text" id="new_username" name="new_username" required />
+
+            <label for="new_password">Create a Password:</label>
+            <input type="password" id="new_password" name="new_password" required />
+
+            <button type="submit" name="action" value="signup">Sign Up</button>
+        </form>
+      
+        <p>Already have an account? <a href="{% url 'Landing:login_signup' %}">Login here</a></p>
+    </div>
+
+</body>
+</html>
