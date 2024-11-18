@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+
+
 urlpatterns = [
     
     # uncomment this line to enable the admin interface. we should keep it commented?
@@ -25,6 +27,7 @@ urlpatterns = [
     #I put the '' instead of the 'Landing' because i'd this will be the main page
     path('', include('Landing.urls')), 
     
-    # This is for any request inside the dashboard app stays on that specific app and do not overwrite the root URL
+    #This is for any request inside the dashboard app stays on that specific app and do not overwrite the root URL
     path('Dashboard', include('Dashboard.urls')),
+    
 ]
