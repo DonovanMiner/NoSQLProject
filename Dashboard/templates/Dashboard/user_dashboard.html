@@ -2,15 +2,44 @@
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Dashboard/dashboard.css' %}" />
     <meta charset="utf-8" />
     <title>User Dashboard</title>
 </head>
 <body>
-    <h1>User Dashboard</h1>
 
-    <div style="width:800px; height:800px">
-        {{ fig | safe }}
+    <div class="HeaderDiv">
+        <h1>StriveOn</h1>
     </div>
+
+    <div class="BodyDiv">
+        <h1>Dashboard</h1>
+
+        <div style="position: relative; width: 45%; height: 400px; display: flex; display: inline-block; flex: auto; padding: 20px 20px; float: left;">
+            {{ fig1 | safe }}
+
+        </div>
+
+        <div style="position: relative; width: 45%; height: 400px; display: flex; display: inline-block; flex: auto; padding: 20px 20px; float: right;">
+            {{ fig2 | safe }}
+        </div>
+
+        <h1>Length Check</h1>
+
+        <div style="position: relative; width: 45%; height: 400px; display: flex; display: inline-block; flex: auto; padding: 20px 20px; float: left;">
+            {{ fig3 | safe }}
+
+        </div>
+
+        <div style="position: relative; width: 45%; height: 400px; display: flex; display: inline-block; flex: auto; padding: 20px 20px; float: right;">
+            {{ fig4 | safe }}
+        </div>
+
+    </div>
+
+
 
 </body>
 </html>
