@@ -3,7 +3,7 @@
 .HeaderDiv {
     position: relative;
     width: calc(100% - 40px);
-    height: 250px;
+    height: fit-content;
     display: inline-block;
     background: orange;
     padding-top: 20px;
@@ -42,18 +42,16 @@
 .BodyDiv {
     position: relative;
     width: calc(100% - 40px);
-    height: 600px;
+    height: 80vh;
     display: inline-block;
     background: grey;
-    padding: 20px 30px;
-    margin: 20px;
-    box-sizing: border-box;
-    align-self: center;
+    /*padding: 20px 30px;
+    align-self: center;*/
 }
 
 
-
 h1 {
+    position: relative; 
     color: black;
     font-family: serif;
     font-size: 30px;
