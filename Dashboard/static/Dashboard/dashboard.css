@@ -42,11 +42,13 @@
 .BodyDiv {
     position: relative;
     width: calc(100% - 40px);
-    height: 80vh;
+    height: 1300px;
     display: inline-block;
     background: grey;
-    /*padding: 20px 30px;
-    align-self: center;*/
+    padding: 20px 50px;
+    margin: 20px;
+    box-sizing: border-box;
+    align-self: center;
 }
 
 

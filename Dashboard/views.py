@@ -86,3 +86,15 @@ def user_dashboard(request):
     context = {"u_id" : u_id, "fig1" : fig1, "fig2" : fig2, "fig3" : fig3, "fig4" : fig4}
     
     return HttpResponse(render(request, 'Dashboard/user_dashboard.html', context))
+
+
+
+def update_user_dashboard(request):
+    
+    value = request.POST.get('workout_type_1')
+    print(f'VALUE CHECK: {value}')
+
+    context = {}
+
+    return HttpResponse(render(request, 'Dashboard/user_dashboard.html', context))
+
