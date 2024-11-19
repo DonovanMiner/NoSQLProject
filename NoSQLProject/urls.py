@@ -28,6 +28,6 @@ urlpatterns = [
     path('', include('Landing.urls')), 
     
     #This is for any request inside the dashboard app stays on that specific app and do not overwrite the root URL
-    path('Dashboard', include('Dashboard.urls')),
+    path('Dashboard/', include('Dashboard.urls')),
     
 ]
