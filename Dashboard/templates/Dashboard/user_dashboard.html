@@ -15,7 +15,7 @@
     </div>
 
     <div class="BodyDiv">
-        <h1>Dashboard {{ u_id }}</h1>
+        <h1>{{ u_name }} Dashboard</h1>
 
         <div style="position: relative; width: 45%; height: 400px; display: flex; display: inline-block; flex: auto; padding: 20px 20px; float: left;">
             {{ fig1 | safe }}
@@ -28,7 +28,7 @@
 
             <label for="workout_type_1">Exercise Type:</label>
             <select name="workout_type_1" id="workout_type_1">
-                <option value="Walking_{{ u_id }}">Walking</option>
+                <option value="Walking">Walking</option>
                 <option value="Cycling">Cycling</option>
                 <option value="Swimming">Swimming</option>
             </select>
@@ -62,6 +62,8 @@
             </select>
             <br /><br />
 
+            <input type="hidden" name="u_id" id="u_id" value="{{ u_id }}" />
+            <input type="hidden" name="u_name" id="u_name" value="{{ u_name }}" />
             <input type="submit" value="Submit" />
         </form>
         </div>
