@@ -62,7 +62,7 @@ def login_signup(request):
             # capturing the account creation date
             date_of_creation = datetime.now()
 
-            # Checking if email already exists in the MongoDB 'users' collection
+            # Checking up if email already exists in the MongoDB 'users' collection
             existing_user = users.find_one({'email_addr': email_addr})
             if existing_user:
                 messages.error(request, "Email already in use")
