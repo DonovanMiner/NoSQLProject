@@ -13,7 +13,7 @@ import ast
 
 def GetQuery(u_id, workout_type, metrics):
     
-    print(f'GET QUERY DEBUG:\n Workout: {workout_type}\nMetrics: {metrics}\n')
+    print(f'GET QUERY DEBUG:\nWorkout: {workout_type}\nMetrics: {metrics}\n')
     df = user_fitness_data.find({"user_id" : u_id['user_id'], "workout_type" : workout_type}).sort({"date" : -1})
     df = [(doc['date'], doc[metrics[0]]) for doc in df] #add if statement for additional metrics in list, make metrics[0] x-axis/values other than date 
     df = pd.DataFrame(df)
@@ -52,8 +52,8 @@ def user_dashboard(request):
 
     u_name = request.POST.get('username')
     password = request.POST.get('password')
-    #print(f'UNAME CHECK: {type(u_name)} {u_name}')
-    #print(f'PASSWORD CHECK: {type(password)} {password}')
+    print(f'UNAME CHECK: {type(u_name)} {u_name}')
+    print(f'PASSWORD CHECK: {type(password)} {password}')
 
     u_id = users.find_one({"u_name" : u_name, "password" : password}, {"_id" : 0, "user_id" : 1})
     print(f'U_ID CHECK: {type(u_id)} {u_id}')
@@ -90,7 +90,10 @@ def update_user_dashboard(request):
     workout_type_4 = request.POST.get('workout_type_4')
 
     metric_1, metric_2, metric_3, metric_4 = ([] for i in range(4))
-    metric_1.append(request.POST.get('metric_1'))
+    metric_1.append(request.POST.get('metric_1')) 
+    metric_2.append(request.POST.get('metric_2'))
+    metric_3.append(request.POST.get('metric_3'))
+    metric_4.append(request.POST.get('metric_4'))
 
     fig1 = RenderPlot(u_id, u_name, workout_type_1, metric_1)
     fig2 = RenderPlot(u_id, u_name, workout_type_2, metric_2)
