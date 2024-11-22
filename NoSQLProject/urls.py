@@ -31,6 +31,5 @@ urlpatterns = [
     path('Dashboard/', include('Dashboard.urls')),
     
     #Any request regarding inside the user account stays on that specific app and do not overwrite the root URL
-    path('MyAccount/', include('MyAccount.urls')),  
-      
+    # path('My_account/', include('My_account.urls')),    
 ]
