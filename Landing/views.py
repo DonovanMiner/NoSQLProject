@@ -4,7 +4,7 @@ from django.template import loader
 from datetime import datetime
 from django.contrib.auth.hashers import make_password, check_password
 
-from NoSQLProject.utils import user_fitness_data, users, goals #import clinet, db as well?
+from NoSQLProject.utils import user_fitness_data, users #import clinet, db as well?
 
 # Home page view (before login)
 def home(request):
