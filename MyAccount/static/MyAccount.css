@@ -1,4 +1,4 @@
-﻿
+
 
 .HeaderDiv {
     position: relative;
@@ -6,7 +6,7 @@
     height: fit-content;
     display: inline-block;
     background: orange;
-    padding-top: 20px;
+    padding-top: 20px; 
     padding-bottom: 20px;
     padding-left: 50px;
     padding-right: 50px;
@@ -30,30 +30,27 @@
     align-self: center;
 }
 
-    .LinkBar p {
-        font-family: 'Times New Roman', Times, serif;
-        color: floralwhite;
-        font-size: 20px;
-        display: inline;
-        vertical-align: central;
-    }
-
+.LinkBar p {
+    font-family: 'Times New Roman', Times, serif;
+    color: floralwhite;
+    font-size: 20px;
+    display: inline;
+    vertical-align: central;
+}
 
 .BodyDiv {
     position: relative;
     width: calc(100% - 40px);
-    height: 1300px;
+    height: 600px;
     display: inline-block;
     background: grey;
-    padding: 20px 50px;
+    padding: 20px 30px;
     margin: 20px;
     box-sizing: border-box;
     align-self: center;
 }
 
-
 h1 {
-    position: relative; 
     color: black;
     font-family: serif;
     font-size: 30px;
@@ -71,7 +68,6 @@ h3 {
     font-size: 18px;
 }
 
-
 p {
     color: black;
     font-family: 'Times New Roman', Times, serif;
@@ -80,6 +76,9 @@ p {
     margin-right: 20px;
 }
 
-
 body {
+
+
+    
+    
 }
