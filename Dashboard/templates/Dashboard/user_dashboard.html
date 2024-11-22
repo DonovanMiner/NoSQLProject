@@ -14,6 +14,12 @@
         <h1>StriveOn</h1>
     </div>
 
+    <div class="LinkBar">
+        <p>Create A Workout</p>
+        <p><a href="{% url 'Dashboard:update_workout' %}">Update A Workout</a></p>
+        <p>Delete A Workout</p>
+    </div>
+
     <div class="BodyDiv">
         <h1>{{ u_name }} Dashboard</h1>
 
@@ -38,7 +44,7 @@
                     </select>
                     &emsp;
                     <label for="metric_1">Metric:</label>
-                    <select name="metric_1" id="metric_1">
+                    <select name="metric_1_1" id="metric_1_1">
                         <option value="active_minutes">Duration</option>
                         <option value="calories_burned">Calories</option>
                         <option value="distance_km">Distance</option>
@@ -58,7 +64,7 @@
                     </select>
                     &emsp;
                     <label for="metric_2">Metric:</label>
-                    <select name="metric_2" id="metric_2">
+                    <select name="metric_2_1" id="metric_2_1">
                         <option value="active_minutes">Duration</option>
                         <option value="calories_burned">Calories</option>
                         <option value="distance_km">Distance</option>
@@ -78,7 +84,7 @@
                     </select>
                     &emsp;
                     <label for="metric_3">Metric:</label>
-                    <select name="metric_3" id="metric_3">
+                    <select name="metric_3_1" id="metric_3_1">
                         <option value="active_minutes">Duration</option>
                         <option value="calories_burned">Calories</option>
                         <option value="distance_km">Distance</option>
@@ -97,7 +103,7 @@
                     </select>
                     &emsp;
                     <label for="metric_4">Metric:</label>
-                    <select name="metric_4" id="metric_4">
+                    <select name="metric_4_1" id="metric_4_1">
                         <option value="active_minutes">Duration</option>
                         <option value="calories_burned">Calories</option>
                         <option value="distance_km">Distance</option>
