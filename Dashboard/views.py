@@ -109,7 +109,7 @@ def update_user_dashboard(request):
         metric_2.append(request.POST.get('metric_2_1'))
         metric_3.append(request.POST.get('metric_3_1'))
         metric_4.append(request.POST.get('metric_4_1'))
-        #print(f'FORM CHECK: {metric_1}')
+        print(f'FORM CHECK: {metric_1}')
         
         fig1 = RenderPlot(u_id, u_name, workout_type_1, metric_1)
         fig2 = RenderPlot(u_id, u_name, workout_type_2, metric_2)
@@ -144,6 +144,5 @@ def update_workout(request):
 
     context = {"u_id" : u_id, "u_name" : u_name}
     
-
     return HttpResponse(render(request, 'Dashboard/update_workout.html', context))
 

@@ -23,16 +23,17 @@
     <div class="BodyDiv">
         <h1>{{ u_name }} Dashboard</h1>
 
-        <div style="position: relative; width: 45%; height: 400px; display: flex; display: inline-block; flex: auto; padding: 20px 20px; float: left;">
-            {{ fig1 | safe }}
-            <br>
-            {{ fig3 | safe }}
+        <div style="position: relative; width: 45%; height: 400px; display: flex; display: inline-grid; flex: auto; padding: 20px 20px;">
 
-        <form method='post' action="{% url 'Dashboard:update_user_dash' %}">
-            {% csrf_token %}
-            <h2>Chart 1</h2>
+            <div style="display: grid; grid-template-columns: 43vw 43vw; grid-template-rows: 50vh 50vh; gap: 20px;">
+                {{ fig1 | safe }}
+                {{ fig2 | safe }}
+                {{ fig3 | safe }}
+                {{ fig4 | safe }}
 
-<<<<<<< HEAD
+                <form method='post' action="{% url 'Dashboard:update_user_dash' %}">
+                    {% csrf_token %}
+                    <h2>Chart 1</h2>
                     <label for="workout_type_1">Exercise Type:</label>
                     <select name="workout_type_1" id="workout_type_1">
                         <option value="Walking">Walking</option>
@@ -40,7 +41,7 @@
                         <option value="Swimming">Swimming</option>
                     </select>
                     &emsp;
-                    <label for="metric_1">Metric:</label>
+                    <label for="metric_1_1">Metric:</label>
                     <select name="metric_1_1" id="metric_1_1">
                         <option value="active_minutes">Duration</option>
                         <option value="calories_burned">Calories</option>
@@ -49,45 +50,7 @@
                         <option value="heart_rate_avg">Heart Rate</option>
                     </select>
                     <br />
-=======
-            <label for="workout_type_1">Exercise Type:</label>
-            <select name="workout_type_1" id="workout_type_1">
-                <option value="Walking">Walking</option>
-                <option value="Cycling">Cycling</option>
-                <option value="Swimming">Swimming</option>
-            </select>
-            &emsp;
-            <label for="metric_1">Metric:</label>
-            <select name="metric_1" id="metric_1">
-                <option value="active_minutes">Duration</option>
-                <option value="calories_burned">Calories</option>
-                <option value="distance_km">Distance</option>
-                <option value="km_hr">Km/Hour</option>
-                <option value="heart_rate_avg">Heart Rate</option>
-            </select>
-            <br />
->>>>>>> ed15349b11e3618b2f21589d8435e79e5fa6dd57
-
-            <h2>Chart 3</h2>
-
-            <label for="workout_type_3">Exercise Type:</label>
-            <select name="workout_type_3" id="workout_type_3">
-                <option value="Walking">Walking</option>
-                <option value="Cycling">Cycling</option>
-                <option value="Swimming">Swimming</option>
-            </select>
-            &emsp;
-            <label for="metric_3">Metric:</label>
-            <select name="metric_3" id="metric_3">
-                <option value="active_minutes">Duration</option>
-                <option value="calories_burned">Calories</option>
-                <option value="distance_km">Distance</option>
-                <option value="km_hr">Km/Hour</option>
-                <option value="heart_rate_avg">Heart Rate</option>
-            </select>
-            <br /><br />
-
-<<<<<<< HEAD
+                    <h2>Chart 2</h2>
                     <label for="workout_type_2">Exercise Type:</label>
                     <select name="workout_type_2" id="workout_type_2">
                         <option value="Walking">Walking</option>
@@ -95,7 +58,7 @@
                         <option value="Swimming">Swimming</option>
                     </select>
                     &emsp;
-                    <label for="metric_2">Metric:</label>
+                    <label for="metric_2_1">Metric:</label>
                     <select name="metric_2_1" id="metric_2_1">
                         <option value="active_minutes">Duration</option>
                         <option value="calories_burned">Calories</option>
@@ -104,10 +67,7 @@
                         <option value="heart_rate_avg">Heart Rate</option>
                     </select>
                     <br />
-
-
                     <h2>Chart 3</h2>
-
                     <label for="workout_type_3">Exercise Type:</label>
                     <select name="workout_type_3" id="workout_type_3">
                         <option value="Walking">Walking</option>
@@ -115,7 +75,7 @@
                         <option value="Swimming">Swimming</option>
                     </select>
                     &emsp;
-                    <label for="metric_3">Metric:</label>
+                    <label for="metric_3_1">Metric:</label>
                     <select name="metric_3_1" id="metric_3_1">
                         <option value="active_minutes">Duration</option>
                         <option value="calories_burned">Calories</option>
@@ -123,10 +83,7 @@
                         <option value="km_hr">Km/Hour</option>
                         <option value="heart_rate_avg">Heart Rate</option>
                     </select>
-
-
                     <h2>Chart 4</h2>
-
                     <label for="workout_type_4">Exercise Type:</label>
                     <select name="workout_type_4" id="workout_type_4">
                         <option value="Walking">Walking</option>
@@ -134,7 +91,7 @@
                         <option value="Swimming">Swimming</option>
                     </select>
                     &emsp;
-                    <label for="metric_4">Metric:</label>
+                    <label for="metric_4_1">Metric:</label>
                     <select name="metric_4_1" id="metric_4_1">
                         <option value="active_minutes">Duration</option>
                         <option value="calories_burned">Calories</option>
@@ -143,76 +100,13 @@
                         <option value="heart_rate_avg">Heart Rate</option>
                     </select>
                     <br /><br />
-
                     <input type="hidden" name="u_id" id="u_id" value="{{ u_id }}" />
                     <input type="hidden" name="u_name" id="u_name" value="{{ u_name }}" />
                     <input type="submit" value="Submit" />
+                </form>
 
-                </form> 
-            
             </div>
-=======
-            <input type="hidden" name="u_id" id="u_id" value="{{ u_id }}" />
-            <input type="hidden" name="u_name" id="u_name" value="{{ u_name }}" />
-            <input type="submit" value="Submit" />
-        </form>
->>>>>>> ed15349b11e3618b2f21589d8435e79e5fa6dd57
         </div>
-
-
-        <div style="position: relative; width: 45%; height: 400px; display: flex; display: inline-block; flex: auto; padding: 20px 20px; float: right;">
-            {{ fig2 | safe }}
-            <br>
-            {{ fig4 | safe }}
-
-            <form method='post' action="{% url 'Dashboard:user_dash' %}">
-                {% csrf_token %}
-                <h2>Chart 2</h2>
-
-                <label for="workout_type_2">Exercise Type:</label>
-                <select name="workout_type_2" id="workout_type_2">
-                    <option value="Walking">Walking</option>
-                    <option value="Cycling">Cycling</option>
-                    <option value="Swimming">Swimming</option>
-                </select>
-                &emsp;
-                <label for="metric_2">Metric:</label>
-                <select name="metric_2" id="metric_2">
-                    <option value="active_minutes">Duration</option>
-                    <option value="calories_burned">Calories</option>
-                    <option value="distance_km">Distance</option>
-                    <option value="km_hr">Km/Hour</option>
-                    <option value="heart_rate_avg">Heart Rate</option>
-                </select>
-                <br />
-
-                <h2>Chart 4</h2>
-
-                <label for="workout_type_4">Exercise Type:</label>
-                <select name="workout_type_4" id="workout_type_4">
-                    <option value="Walking">Walking</option>
-                    <option value="Cycling">Cycling</option>
-                    <option value="Swimming">Swimming</option>
-                </select>
-                &emsp;
-                <label for="metric_4">Metric:</label>
-                <select name="metric_4" id="metric_4">
-                    <option value="active_minutes">Duration</option>
-                    <option value="calories_burned">Calories</option>
-                    <option value="distance_km">Distance</option>
-                    <option value="km_hr">Km/Hour</option>
-                    <option value="heart_rate_avg">Heart Rate</option>
-                </select>
-                <br /><br />
-
-                <input type="submit" value="Submit" />
-            </form>
-        </div>
-
-
     </div>
-
-
-
 </body>
 </html>
