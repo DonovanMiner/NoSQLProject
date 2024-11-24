@@ -12,14 +12,16 @@ import pandas as pd
 import ast
 
 
+
 def GetQuery(u_id, workout_type, metrics):
     
-    print(f'GET QUERY DEBUG:\nWorkout: {workout_type}\nMetrics: {metrics}\n')
+    #print(f'UID QUERY DEBUG: {type(u_id)} {u_id}')
+    #print(f'GET QUERY DEBUG:\nWorkout: {workout_type}\nMetrics: {metrics}\n')
     df = user_fitness_data.find({"user_id" : u_id['user_id'], "workout_type" : workout_type}).sort({"date" : -1})
     df = [(doc['date'], doc[metrics[0]]) for doc in df] #add if statement for additional metrics in list, make metrics[0] x-axis/values other than date 
     df = pd.DataFrame(df)
     #df[1] = df[1] / (df[2]/60)
-    print(f'GET QUERY DATAFRAME CHECK:\n {df}')
+    #print(f'GET QUERY DATAFRAME CHECK:\n {df}')
 
     return df
 
@@ -134,15 +136,46 @@ def update_user_dashboard(request):
     return HttpResponse(render(request, 'Dashboard/user_dashboard.html', context))
 
 
+
+def GetUpdateWorkoutQuery(u_id, search_by, search_query):
+    
+    #lookup = {'date' : 'date', 'distance_km' : 'distance_km'}
+        
+    try:
+        search_query = float(search_query)    
+    except:
+        print('typer conversion failed')    
+
+    #print(f'U_ID CHECK: {u_id} {search_by} {type(search_query)} {search_query}')
+    ret_doc = user_fitness_data.find({"user_id" : u_id['user_id'], str(search_by) : search_query})
+    docs = [doc for doc in ret_doc]
+
+    #print(f'FIN DOC CHECK:\n{docs}')
+    
+    return docs
+
+
+def UpdateWorkoutDoc():
+    pass
+    
+
+
 def update_workout(request):
    
     u_name = request.session.get('u_name')
     u_id = request.session.get('u_id')
-    print(f'U_ID CHECK: {type(u_id)} {u_id}')
-    print(f'UNAME CHECK: {type(u_name)} {u_name}')
+    #print(f'U_ID CHECK: {type(u_id)} {u_id}')
+    #print(f'UNAME CHECK: {type(u_name)} {u_name}')
 
+    docs = []
+    # df = [(doc['date'], doc[metrics[0]]) for doc in df] 
+    if(request.method == "POST"):
+        #search for docs and put them here
+        search_by = request.POST.get('search_by')
+        search_query = request.POST.get('search_query')
+        docs = GetUpdateWorkoutQuery(u_id, search_by, search_query)
 
-    context = {"u_id" : u_id, "u_name" : u_name}
+    context = {"u_id" : u_id, "u_name" : u_name, "docs" : docs}
     
     return HttpResponse(render(request, 'Dashboard/update_workout.html', context))
 

@@ -23,11 +23,92 @@
     
     <!--need forms to search for a doc, display it, then change it-->
 
-    <div class="BodyDiv">
+    <div class="BodyDiv" style="height: fit-content;">
 
+        <form method="POST" action="{% url 'Dashboard:update_workout' %}">
+            {% csrf_token %}
+            <label for="search_by">Search By:</label>
+            <select name="search_by" id="search_by">
+                <option value="date">Date</option>
+                <option value="distance_km">Distance</option>
+            </select>
 
+            <br /><br />
+
+            <label for="search_query">Search For:</label>
+            <input type="text" name="search_query" id="search_query" />
+
+            <br /><br />
+
+            <input type="submit" value="Submit" />
+        </form>
+
+        <h1>Results</h1>
+        <hr style="height: 5px; color: white; background-color: white; border-color: white;">
+
+        {% for doc in docs %}
+            <div style="position: relative; display: flex; flex: auto; display: grid; grid-template-columns: 6vw 25vw; grid-template-rows: 30vh; padding: 20px 10px;">
+            <p><b><u>{{ forloop.counter }}.</u></b>&emsp;<a href="{% url 'Dashboard:update_workout' %}">Edit</a></p>
+                <table>
+                    <tr>
+                        <td>Exercise:</td>
+                        <td>{{ doc.workout_type }}</td>
+                    </tr>
+                    <tr>
+                        <td>Distance (km):</td>
+                        <td>{{ doc.distance_km }}</td>
+                    </tr>
+                    <tr>
+                        <td>Location:</td>
+                        <td>{{ doc.location }}</td>
+                    </tr>
+                    <tr>
+                        <td>Date:</td>
+                        <td>{{ doc.date }}</td>
+                    </tr>
+                    <tr>
+                        <td>Steps:</td>
+                        <td>{{ doc.steps }}</td>
+                    </tr>
+                    <tr>
+                        <td>Hear Rate Avg:</td>
+                        <td>{{ doc.heart_rate_avg }}</td>
+                    </tr>
+                    <tr>
+                        <td>Calories:</td>
+                        <td>{{ doc.calories_burned }}</td>
+                    </tr>
+                    <tr>
+                        <td>Sleep:</td>
+                        <td>{{ doc.sleep_hours }}</td>
+                    </tr>
+                    <tr>
+                        <td>Weather:</td>
+                        <td>{{ doc.weather_conditions }}</td>
+                    </tr>
+                    <tr>
+                        <td>Mood:</td>
+                        <td>{{ doc.mood }}</td>
+                    </tr>
+                    <tr>
+                        <td>Sleep:</td>
+                        <td>{{ doc.sleep_hours }}</td>
+                    </tr>
+                </table>
+
+                <!--<div id="update_doc" style="margin: 5px 10px;">
+                    <form method="post" action="tbd">
+                        {% csrf_token %}
+                        <label for="exercise">Edit Exercise</label>
+                        <input type="text" name="exercise" id="exercise" />
+                    </form>
+                </div>-->
+            </div>
+            <hr style="height: 2px; color: white; background-color: white; border-color: white;">
+        {% endfor %}
     </div>
 
+    
 
 </body>
 </html>

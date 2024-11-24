@@ -80,6 +80,13 @@ p {
     margin-right: 20px;
 }
 
+table {
+    border: 2px solid black;
+}
+
+td {
+    border: 1px solid black;
+}
 
 body {
 }
