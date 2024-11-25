@@ -1,3 +1,5 @@
+from pickle import OBJ
+from bson.objectid import ObjectId
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
@@ -170,7 +172,7 @@ def update_workout(request):
     docs = []
     # df = [(doc['date'], doc[metrics[0]]) for doc in df] 
     if(request.method == "POST"):
-        #search for docs and put them here
+        #CACHE THE RETURNED LIST
         search_by = request.POST.get('search_by')
         search_query = request.POST.get('search_query')
         docs = GetUpdateWorkoutQuery(u_id, search_by, search_query)
@@ -178,4 +180,53 @@ def update_workout(request):
     context = {"u_id" : u_id, "u_name" : u_name, "docs" : docs}
     
     return HttpResponse(render(request, 'Dashboard/update_workout.html', context))
+ 
 
+def GetObjID(doc):
+
+    id_start = doc.find('(')
+    id_stop = doc.find(')', id_start)
+
+    obj_id = doc[id_start+2 : id_stop-1]
+
+    return obj_id
+
+
+def edit_workout(request):
+    
+    u_name = request.session.get('u_name')
+    u_id = request.session.get('u_id')
+    
+    context = {"u_id" : u_id, "u_name" : u_name}
+
+    if(request.method == "POST"):
+        action = request.POST.get('edit_delete_select')
+        print(f'ACTION CHECK: {action}')
+        
+        if(action == 'edit'):
+            doc = request.POST.get('doc_info')
+            obj_id = GetObjID(doc)
+            doc = user_fitness_data.find_one({'_id' : ObjectId(obj_id)})
+            doc_id = {'_id' : doc['_id'], 'user_id' : doc['user_id']}
+            del doc['_id']
+            del doc['user_id']
+            
+            context.update({"action" : action})
+            context.update({"doc" : doc})
+            context.update({"doc_id" : doc_id})
+            
+        elif(action == 'update'):
+            doc_id = request.POST.get('doc_id')
+            doc_keys = request.POST.get('doc_keys')
+            print(f'DOC KEYS CHECK: {type(doc_keys)} {doc_keys}')
+
+
+        elif(action == 'delete'):
+            pass
+        
+
+        
+        #if action is edit, render edit section, if delete, delete, if updated from edit section, make changes
+
+
+    return HttpResponse(render(request, 'Dashboard/edit_workout.html', context))

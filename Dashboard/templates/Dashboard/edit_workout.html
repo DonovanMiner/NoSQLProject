@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Dashboard/dashboard.css' %}" />
+
+    <meta charset="utf-8" />
+    <title>Edit A Workout</title>
+</head>
+<body>
+
+    <div class="HeaderDiv">
+        <h1>StriveOn</h1>
+        <h2>Update A Workout</h2>
+    </div>
+
+    <div class="LinkBar">
+        <p><a href="{% url 'Dashboard:update_user_dash' %}">Dashboard</a></p>
+    </div>
+
+    <div class="BodyDiv">
+        <form method="post" action="{% url 'Dashboard:edit_workout' %}">
+            {% csrf_token %}
+            {% for key, value in doc.items %}
+                <label for="{{ key }}">{{ key }}:</label><br />
+                <input type="text" name="{{ key }}" id="{{ key }}" value="{{ value }} "/>             
+                <br /><br />
+            {% endfor %}
+            <label for="edit_delete_select">Edit/Delete:</label>
+            <select name="edit_delete_select" id="edit_delete_select">
+                <option value="update">Edit</option>
+                <option value="delete">Delete</option>
+            </select>
+            <br />
+            <br />
+            <input type="hidden" name="doc_keys" id="doc_keys" value="{{ doc.keys }}" />
+            <input type="hidden" name="doc_id" id="doc_id" value="{{ doc_id }}" />
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+
+    
+
+
+</body>
+</html>
