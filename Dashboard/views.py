@@ -157,10 +157,7 @@ def GetUpdateWorkoutQuery(u_id, search_by, search_query):
     return docs
 
 
-def UpdateWorkoutDoc():
-    pass
     
-
 
 def update_workout(request):
    
@@ -182,6 +179,9 @@ def update_workout(request):
     return HttpResponse(render(request, 'Dashboard/update_workout.html', context))
  
 
+
+
+
 def GetObjID(doc):
 
     id_start = doc.find('(')
@@ -190,6 +190,24 @@ def GetObjID(doc):
     obj_id = doc[id_start+2 : id_stop-1]
 
     return obj_id
+
+
+
+def UpdateEditDoc(new_doc, doc_id):
+    
+
+    for k, v in new_doc:
+        if k != 'csrfmiddlewaretoken' and k != 'doc_id':
+            print(f'Key: {k}')
+            print(f'Value: {v}')
+            
+
+            
+    #FORMAT INTO A DICTIONARY, UPDATE VIA DOC ID 
+
+    #query updated doc into database
+
+
 
 
 def edit_workout(request):
@@ -215,10 +233,22 @@ def edit_workout(request):
             context.update({"doc" : doc})
             context.update({"doc_id" : doc_id})
             
+
         elif(action == 'update'):
             doc_id = request.POST.get('doc_id')
-            doc_keys = request.POST.get('doc_keys')
-            print(f'DOC KEYS CHECK: {type(doc_keys)} {doc_keys}')
+            new_doc = request.POST.items()
+            
+            doc_id = GetObjID(doc_id)
+            UpdateEditDoc(new_doc, doc_id)
+            #print(f'DOC ID: {doc_id}')
+            updated_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
+            doc_id = {'_id' : updated_doc['_id'], 'user_id' : updated_doc['user_id']}
+            del updated_doc['_id']
+            del updated_doc['user_id']
+            
+            context.update({"action" : action})
+            context.update({"doc" : updated_doc})
+            context.update({"doc_id" : doc_id})
 
 
         elif(action == 'delete'):
