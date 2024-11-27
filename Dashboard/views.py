@@ -1,10 +1,9 @@
-from pickle import OBJ
-from bson.objectid import ObjectId
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 
 from pymongo import client_session
+from bson.objectid import ObjectId
 from NoSQLProject.utils import user_fitness_data, users
 
 import plotly.graph_objects as go
@@ -142,11 +141,14 @@ def update_user_dashboard(request):
 def GetUpdateWorkoutQuery(u_id, search_by, search_query):
     
     #lookup = {'date' : 'date', 'distance_km' : 'distance_km'}
-        
-    try:
-        search_query = float(search_query)    
-    except:
-        print('typer conversion failed')    
+    
+    if(search_by == '_id'):
+        search_query = ObjectId(f'{search_query}')
+    else:
+        try:
+            search_query = float(search_query)    
+        except ValueError:
+            pass    
 
     #print(f'U_ID CHECK: {u_id} {search_by} {type(search_query)} {search_query}')
     ret_doc = user_fitness_data.find({"user_id" : u_id['user_id'], str(search_by) : search_query})
@@ -182,6 +184,7 @@ def update_workout(request):
 
 
 
+
 def GetObjID(doc):
 
     id_start = doc.find('(')
@@ -195,17 +198,36 @@ def GetObjID(doc):
 
 def UpdateEditDoc(new_doc, doc_id):
     
+    update_vals = {"$set" : {}}
 
     for k, v in new_doc:
-        if k != 'csrfmiddlewaretoken' and k != 'doc_id':
-            print(f'Key: {k}')
-            print(f'Value: {v}')
+        if k != 'csrfmiddlewaretoken' and k != 'doc_id' and k != 'edit_delete_select':
+            
+            try:
+                v = float(v)
+            except ValueError:
+                pass
+            try:
+                v = int(v)
+            except ValueError:
+                pass
+
+            #IF VALUE IS STRING STRIP WHITESPACE
+
+            print(f'Key: {k} {type(k)}')
+            print(f'Value: {v} {type(v)}')
             
 
+            update_vals['$set'].update({k : v})
             
-    #FORMAT INTO A DICTIONARY, UPDATE VIA DOC ID 
 
-    #query updated doc into database
+    print(f'UPDATE VALS CHECK: {update_vals}')
+    user_fitness_data.update_one({'_id' : ObjectId(doc_id)}, update_vals)
+    
+    new_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
+    print(f'NEW DOC CHECK: {new_doc}')
+
+    #make sure query updates doc correctly
 
 
 
