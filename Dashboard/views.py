@@ -206,16 +206,16 @@ def UpdateEditDoc(new_doc, doc_id):
             try:
                 v = float(v)
             except ValueError:
-                pass
-            try:
-                v = int(v)
-            except ValueError:
-                pass
+                try:
+                    v = int(v)
+                except ValueError:
+                    pass
 
-            #IF VALUE IS STRING STRIP WHITESPACE
+            if(isinstance(v, str)):
+                v = v.strip()
 
-            print(f'Key: {k} {type(k)}')
-            print(f'Value: {v} {type(v)}')
+            #print(f'Key: {k} {type(k)}')
+            #print(f'Value: {v} {type(v)}')
             
 
             update_vals['$set'].update({k : v})
@@ -224,8 +224,8 @@ def UpdateEditDoc(new_doc, doc_id):
     print(f'UPDATE VALS CHECK: {update_vals}')
     user_fitness_data.update_one({'_id' : ObjectId(doc_id)}, update_vals)
     
-    new_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
-    print(f'NEW DOC CHECK: {new_doc}')
+    #new_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
+    #print(f'NEW DOC CHECK: {new_doc}')
 
     #make sure query updates doc correctly
 
@@ -243,6 +243,11 @@ def edit_workout(request):
         action = request.POST.get('edit_delete_select')
         print(f'ACTION CHECK: {action}')
         
+        #add create section
+        #action = 'create'
+        #field = request.POST.get('created_field')
+        #value = request.POST.get('created_value')
+
         if(action == 'edit'):
             doc = request.POST.get('doc_info')
             obj_id = GetObjID(doc)
