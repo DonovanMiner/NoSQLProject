@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 
-from pymongo import client_session
+from pymongo import DeleteOne, client_session
 from bson.objectid import ObjectId
 from NoSQLProject.utils import user_fitness_data, users
 
@@ -185,7 +185,38 @@ def update_workout(request):
 
 
 
-def GetObjID(doc):
+
+
+def AddDocField(doc_id, field, value):
+   
+    add_val = {"$set" : {f'{field}' : value}}
+    #print(add_val)
+
+    try:
+        value = float(value)
+    except ValueError:
+        try:
+            value = int(value)
+        except ValueError:
+            pass
+
+    if(isinstance(value, str)):
+        value = value.strip()
+        
+    user_fitness_data.update_one({'_id' : ObjectId(doc_id)}, add_val)
+
+
+def RemoveDocField(doc_id, field):
+    
+    user_fitness_data.update_one({'_id' : ObjectId(doc_id)}, {"$unset" : {f'{field}' : "" }})
+    
+
+def DeleteWholeDoc(doc_id):
+    
+    user_fitness_data.delete_one({'_id' : ObjectId(doc_id)})
+
+
+def TrimObjID(doc):
 
     id_start = doc.find('(')
     id_stop = doc.find(')', id_start)
@@ -221,7 +252,7 @@ def UpdateEditDoc(new_doc, doc_id):
             update_vals['$set'].update({k : v})
             
 
-    print(f'UPDATE VALS CHECK: {update_vals}')
+    #print(f'UPDATE VALS CHECK: {update_vals}')
     user_fitness_data.update_one({'_id' : ObjectId(doc_id)}, update_vals)
     
     #new_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
@@ -240,17 +271,27 @@ def edit_workout(request):
     context = {"u_id" : u_id, "u_name" : u_name}
 
     if(request.method == "POST"):
-        action = request.POST.get('edit_delete_select')
+        
+        #try except here for only one value for created value
+        if(request.POST.get('created_field') and request.POST.get('created_value')):
+            action = 'create_field'
+            field = request.POST.get('created_field')
+            value = request.POST.get('created_value')
+            
+        elif(request.POST.get('remove_field')):
+            action = 'remove_field'
+            field = request.POST.get('remove_field')
+
+        else:
+            action = request.POST.get('edit_delete_select')
+        
+
         print(f'ACTION CHECK: {action}')
         
-        #add create section
-        #action = 'create'
-        #field = request.POST.get('created_field')
-        #value = request.POST.get('created_value')
 
         if(action == 'edit'):
             doc = request.POST.get('doc_info')
-            obj_id = GetObjID(doc)
+            obj_id = TrimObjID(doc)
             doc = user_fitness_data.find_one({'_id' : ObjectId(obj_id)})
             doc_id = {'_id' : doc['_id'], 'user_id' : doc['user_id']}
             del doc['_id']
@@ -265,7 +306,7 @@ def edit_workout(request):
             doc_id = request.POST.get('doc_id')
             new_doc = request.POST.items()
             
-            doc_id = GetObjID(doc_id)
+            doc_id = TrimObjID(doc_id)
             UpdateEditDoc(new_doc, doc_id)
             #print(f'DOC ID: {doc_id}')
             updated_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
@@ -278,12 +319,63 @@ def edit_workout(request):
             context.update({"doc_id" : doc_id})
 
 
+        elif(action == 'create_field'):
+            #CREATE WHOLE NEW DOCUMENT?
+            doc_id = request.POST.get('doc_id')
+            doc_id = TrimObjID(doc_id)
+            #print(f'CREATE DOC CHECK: {type(doc_id)} {doc_id}') 
+            
+            AddDocField(doc_id, field, value)
+            
+            updated_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
+            doc_id = {'_id' : updated_doc['_id'], 'user_id' : updated_doc['user_id']}
+            del updated_doc['_id']
+            del updated_doc['user_id']
+            
+            context.update({"action" : action})
+            context.update({"doc" : updated_doc})
+            context.update({"doc_id" : doc_id})
+
         elif(action == 'delete'):
-            pass
+            
+            try:
+                doc_id = request.POST.get('doc_id')
+            except:
+                doc_info = request.POST.get('doc_info')
+                doc_id = TrimObjID(doc)
+                
+            DeleteWholeDoc(doc_id)
+            
+            context.update({"action" : action})
         
-
-        
-        #if action is edit, render edit section, if delete, delete, if updated from edit section, make changes
-
+        elif(action == 'remove_field'):
+            doc_id = request.POST.get('doc_id')
+            doc_id = TrimObjID(doc_id)
+            
+            RemoveDocField(doc_id, field)
+            
+            updated_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
+            doc_id = {'_id' : updated_doc['_id'], 'user_id' : updated_doc['user_id']}
+            del updated_doc['_id']
+            del updated_doc['user_id']
+            
+            context.update({"action" : action})
+            context.update({"doc" : updated_doc})
+            context.update({"doc_id" : doc_id})
+            
 
     return HttpResponse(render(request, 'Dashboard/edit_workout.html', context))
+
+
+
+
+
+def create_workout(request):
+
+    u_name = request.session.get('u_name')
+    u_id = request.session.get('u_id')
+    context = {"u_id" : u_id, "u_name" : u_name}
+
+
+    return HttpResponse(render(request, 'Dashboard/create_workout.html', context))
+    
