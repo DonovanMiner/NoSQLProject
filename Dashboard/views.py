@@ -6,12 +6,26 @@ from pymongo import DeleteOne, client_session
 from bson.objectid import ObjectId
 from NoSQLProject.utils import user_fitness_data, users
 
+import datetime
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
 import pandas as pd
 import ast
 
+
+def FormatDate(date):
+    
+    month_lookup = {'January' : 1, 'February' : 2, 'March' : 3, 'April' : 4, 'May' : 5, 'June' : 6, 'July' : 7, 
+             'August' : 8, 'September' : 9, 'October' : 10, 'November' : 11, 'December' : 12}
+
+    month, day, year = date.split(' ', 2)
+    month = int(month_lookup[month])
+    day = int(month)
+    year = int(year)
+
+    return datetime.datetime(year, month, day, 0, 0, 0)
+    
 
 
 def GetQuery(u_id, workout_type, metrics):
@@ -144,6 +158,8 @@ def GetUpdateWorkoutQuery(u_id, search_by, search_query):
     
     if(search_by == '_id'):
         search_query = ObjectId(f'{search_query}')
+    elif(search_by == 'date'):
+        search_query = FormatDate(search_query)
     else:
         try:
             search_query = float(search_query)    
@@ -152,11 +168,11 @@ def GetUpdateWorkoutQuery(u_id, search_by, search_query):
 
     #print(f'U_ID CHECK: {u_id} {search_by} {type(search_query)} {search_query}')
     ret_doc = user_fitness_data.find({"user_id" : u_id['user_id'], str(search_by) : search_query})
-    docs = [doc for doc in ret_doc]
+    return [doc for doc in ret_doc]
 
     #print(f'FIN DOC CHECK:\n{docs}')
     
-    return docs
+    
 
 
     
@@ -234,24 +250,25 @@ def UpdateEditDoc(new_doc, doc_id):
     for k, v in new_doc:
         if k != 'csrfmiddlewaretoken' and k != 'doc_id' and k != 'edit_delete_select':
             
-            try:
-                v = float(v)
-            except ValueError:
+            if(k == 'date'):
+                v = FormatDate(v)
+            else:
                 try:
-                    v = int(v)
+                    v = float(v)
                 except ValueError:
-                    pass
+                    try:
+                        v = int(v)
+                    except ValueError:
+                        pass
 
-            if(isinstance(v, str)):
-                v = v.strip()
+                if(isinstance(v, str)):
+                    v = v.strip()
 
             #print(f'Key: {k} {type(k)}')
             #print(f'Value: {v} {type(v)}')
             
-
             update_vals['$set'].update({k : v})
             
-
     #print(f'UPDATE VALS CHECK: {update_vals}')
     user_fitness_data.update_one({'_id' : ObjectId(doc_id)}, update_vals)
     
@@ -260,6 +277,34 @@ def UpdateEditDoc(new_doc, doc_id):
 
     #make sure query updates doc correctly
 
+
+def CreateNewDoc(doc_info, u_id):
+        
+    insert_fields = {}
+
+    for field, value in doc_info:
+        
+        if(field != 'csrfmiddlewaretoken'):
+            
+            if(field == 'date'):
+                value = FormatDate(value)
+            else:
+                try:
+                    value = float(value)
+                except ValueError:
+                    try:
+                        value = int(value)
+                    except ValueError:
+                        pass
+
+                if(isinstance(value, str)):
+                    value = value.strip()
+
+            insert_fields.update({field : value})
+            #print(f'CREATE DOC CHECK: {insert_fields}')
+            
+    insert_fields.update({'user_id' : u_id})
+    user_fitness_data.insert_one(insert_fields)
 
 
 
@@ -375,7 +420,11 @@ def create_workout(request):
     u_name = request.session.get('u_name')
     u_id = request.session.get('u_id')
     context = {"u_id" : u_id, "u_name" : u_name}
-
+    
+    if(request.method == 'POST'):
+        
+       doc_info = request.POST.items()
+       CreateNewDoc(doc_info, u_id)
 
     return HttpResponse(render(request, 'Dashboard/create_workout.html', context))
     

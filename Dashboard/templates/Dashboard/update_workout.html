@@ -29,6 +29,15 @@
             <select name="search_by" id="search_by">
                 <option value="date">Date</option>
                 <option value="distance_km">Distance</option>
+                <option value="steps">Steps</option>
+                <option value="calories_burned">Calories</option>
+                <option value="active_minutes">Duration</option>
+                <option value="sleep_hours">Sleep Duration</option>
+                <option value="heart_rate_avg">Heart Rate</option>
+                <option value="workout_type">Exercise</option>
+                <option value="weather_conditions">Weather</option>
+                <option value="location">Location</option>
+                <option value="mood">Mood</option>
                 <option value="_id">Document ID</option>
             </select>
 
@@ -37,15 +46,15 @@
             <label for="search_query">Search For:</label>
             <input type="text" name="search_query" id="search_query" />
 
-            <br /><br />
+            <p style="font-size: 12px;">*Enter date field as "month day year" (excl. quotes)*</p>
 
             <input type="submit" value="Submit" />
         </form>
 
         <h1>Results</h1>
+        <h3>Found {{ docs|length }} documents</h3>
         <hr style="height: 5px; color: white; background-color: white; border-color: white;">
-
-        <!--add button to delete here-->
+        
         {% for doc in docs %}
             <div style="position: relative; display: flex; flex: auto; display: grid; grid-template-columns: 4vw 6vw 30vw; grid-template-rows: 30vh; padding: 20px 10px;">
             <p><b><u>{{ forloop.counter }}.</u></b></p>
@@ -84,7 +93,7 @@
                         <td>{{ doc.steps }}</td>
                     </tr>
                     <tr>
-                        <td>Hear Rate Avg:</td>
+                        <td>Heart Rate Avg:</td>
                         <td>{{ doc.heart_rate_avg }}</td>
                     </tr>
                     <tr>
@@ -92,8 +101,8 @@
                         <td>{{ doc.calories_burned }}</td>
                     </tr>
                     <tr>
-                        <td>Sleep:</td>
-                        <td>{{ doc.sleep_hours }}</td>
+                        <td>Duration:</td>
+                        <td>{{ doc.active_minutes }}</td>
                     </tr>
                     <tr>
                         <td>Weather:</td>

@@ -22,6 +22,75 @@
 
     <div class="BodyDiv">
         <h2>Create Fields</h2>
+        <p>Add the basic information for a workout. Additional information can be added under the "Update/Delete A Workout" tab.</p>
+
+        <form method="post" action="{% url 'Dashboard:create_workout' %}">
+            {% csrf_token %}
+            <label for="workout_type">Exercise:</label><br />
+            <select name="workout_type" id="workout_type">
+                <option value="Swimming">Swimming</option>
+                <option value="Yoga">Yoga</option>
+                <option value="Cycling">Cycling</option>
+                <option value="Walking">Walking</option>
+                <option value="Gym Workout">Gym</option>
+                <option value="Running">Running</option>
+                <option value="None">None</option>
+            </select>
+            <br />
+
+            <label for="mood">Mood:</label><br /> 
+            <select name="mood" id="mood">
+                <option value="Neutral">Neutral</option>
+                <option value="Tired">Tired</option>
+                <option value="Stressed">Stressed</option>
+                <option value="Happy">Happy</option>
+            </select>
+            <br />
+
+            <label for="location">Location:</label><br />
+            <select name="locatinon" id="location">
+                <option value="Gym">Gym</option>
+                <option value="Park">Park</option>
+                <option value="Home">Home</option>
+                <option value="Office">Office</option>
+                <option value="Other">Other</option>
+            </select>
+            <br />
+
+            <label for="weather_conditions">Weather:</label><br />
+            <select name="weather_conditions" id="weather_conditions">
+                <option value="Clear">Clear</option>
+                <option value="Rain">Rain</option>
+                <option value="Snow">Snow</option>
+                <option value="Fog">Fog</option>
+            </select>
+            <br />
+
+            <label for="distance_km">Distance (km):</label><br />
+            <input type="text" name="distance_km" id="distance_km" />
+            <br />
+            <label for="date">Date:</label><br />
+            <input type="text" name="date" id="date" placeholder="January 1 2025" />
+            <br />
+            <label for="steps">Steps:</label><br />
+            <input type="text" name="steps" id="steps" />
+            <br />
+            <label for="heart_rate_avg">Heart Rate Avg:</label><br />
+            <input type="text" name="heart_rate_avg" id="heart_rate_avg" />
+            <br />
+            <label for="calories_burned">Calories:</label><br />
+            <input type="text" name="calories_burned" id="calories_burned" />
+            <br />
+            <label for="active_minutes">Duration:</label><br />
+            <input type="text" name="active_minutes" id="active_minutes" />
+            <br />
+            <label for="sleep_hours">Sleep:</label><br />
+            <input type="text" name="sleep_hours" id="sleep_hours" />
+            <br /><br />
+
+            <input type="submit" value="Submit" />
+
+        </form>
 
     </div>
 
