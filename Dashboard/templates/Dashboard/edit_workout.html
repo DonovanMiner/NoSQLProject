@@ -20,7 +20,9 @@
         <p><a href="{% url 'Dashboard:update_user_dash' %}">Dashboard</a></p>
     </div>
 
-    <div class="BodyDiv">
+    <div class="BodyDiv" style="display: grid; grid-template-columns: 30vw 30vw 30vw; grid-template-rows: 50vh 50vh; gap: 20px;
+">
+        
         <form method="post" action="{% url 'Dashboard:edit_workout' %}">
             {% csrf_token %}
             {% for key, value in doc.items %}
@@ -38,6 +40,34 @@
             <input type="hidden" name="doc_id" id="doc_id" value="{{ doc_id }}" />
             <input type="submit" value="Submit" />
         </form>
+
+        <form method="post" action="{% url 'Dashboard:edit_workout' %}">
+            {% csrf_token %}
+            <h2>Create a Field</h2>
+            
+            <label for="created_field">Field Name:</label>
+            <input type="text" name="created_field" id="created_field" />
+            <br />
+            <label for="created_value">Value:</label>
+            <input type="text" name="created_value" id="created_value" />
+            <br />
+            <input type="hidden" name="doc_id" id="doc_id" value="{{ doc_id }}" />
+            <input type="submit" value="Submit" />
+        </form>
+
+        <form method="post" action="{% url 'Dashboard:edit_workout' %}">
+            {% csrf_token %}
+            <h2>Remove a Field</h2>
+
+            <label for="remove_field">Field Name:</label>
+            <input type="text" name="remove_field" id="remove_field" />
+            <br />
+            <input type="hidden" name="doc_id" id="doc_id" value="{{ doc_id }}" />
+            <input type="submit" value="Submit" />
+        </form>
+
+
+
     </div>
 
     

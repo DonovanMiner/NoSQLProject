@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Dashboard/dashboard.css' %}" />
+
+    <meta charset="utf-8" />
+    <title>Create A Workout</title>
+</head>
+<body>
+
+    <div class="HeaderDiv">
+        <h1>Strive On</h1>
+        <h2>Create A Workout</h2>
+    </div>
+
+    <div class="LinkBar">
+        <p><a href="{% url 'Dashboard:update_user_dash' %}">Dashboard</a></p>
+    </div>
+
+    <div class="BodyDiv">
+        <h2>Create Fields</h2>
+
+    </div>
+
+</body>
+</html>
