@@ -28,21 +28,31 @@ def FormatDate(date):
     
 
 
-def GetQuery(u_id, workout_type, metrics):
+def GetRenderQuery(u_id, workout_type, metrics):
     
-    #print(f'UID QUERY DEBUG: {type(u_id)} {u_id}')
-    #print(f'GET QUERY DEBUG:\nWorkout: {workout_type}\nMetrics: {metrics}\n')
-    df = user_fitness_data.find({"user_id": u_id['user_id'], "workout_type": workout_type}).sort([("date", -1)])
-    df = [(doc['date'], doc[metrics[0]]) for doc in df] #add if statement for additional metrics in list, make metrics[0] x-axis/values other than date 
-    df = pd.DataFrame(df)
-    #df[1] = df[1] / (df[2]/60)
-    #print(f'GET QUERY DATAFRAME CHECK:\n {df}')
+    if(len(metrics) == 2):
 
-    return df
+        #print(f'UID QUERY DEBUG: {type(u_id)} {u_id}')
+        #print(f'GET QUERY DEBUG:\nWorkout: {workout_type}\nMetrics: {metrics}\n')
+
+        df = user_fitness_data.find({"user_id" : u_id['user_id'], "workout_type" : workout_type}).sort([("date", -1)])
+        df = [(doc['date'], doc[metrics[0]]) for doc in df] #add if statement for additional metrics in list, make metrics[0] x-axis/values other than date 
+        return pd.DataFrame(df)
+        #debug
+        #df = pd.DataFrame(df)
+        #df[1] = df[1] / (df[2]/60)
+        #print(f'GET QUERY DATAFRAME CHECK:\n {df}')
+
+    elif(len(metrics) == 3):
+        pass #add division process - metric 1 divided by metric 2 to get m1 per m2
+        df = user_fitness_data.find({'user_id' : u_id['user_id']})
+        df = [[doc['date'], doc[metrics[0]], doc[metrics[1]]] for doc in df]
+        #divide
+        
 
 def RenderPlot(u_id, u_name, workout_type, metrics):
     
-    df = GetQuery(u_id, workout_type, metrics)
+    df = GetRenderQuery(u_id, workout_type, metrics)
     
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df[0], y=df[1]))
@@ -126,8 +136,18 @@ def update_user_dashboard(request):
         metric_2.append(request.POST.get('metric_2_1'))
         metric_3.append(request.POST.get('metric_3_1'))
         metric_4.append(request.POST.get('metric_4_1'))
-        print(f'FORM CHECK: {metric_1}')
+        #print(f'FORM CHECK: {metric_1}')
         
+        if(request.POST.get('metric_1_2') != 'None'):
+            metric_1.append(request.POST.get('metric_1_2'))
+        if(request.POST.get('metric_2_2') != 'None'):
+            metric_1.append(request.POST.get('metric_2_2'))
+        if(request.POST.get('metric_3_2') != 'None'):
+            metric_1.append(request.POST.get('metric_3_2'))
+        if(request.POST.get('metric_4_2') != 'None'):
+            metric_1.append(request.POST.get('metric_4_2'))
+        
+
         fig1 = RenderPlot(u_id, u_name, workout_type_1, metric_1)
         fig2 = RenderPlot(u_id, u_name, workout_type_2, metric_2)
         fig3 = RenderPlot(u_id, u_name, workout_type_3, metric_3)
