@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Settings</title>
-    <link rel="stylesheet" href="{% static 'MyAccount/css/MyAccount.css' %}">
+    <link rel="stylesheet" href="{% static 'MyAccount/myaccount.css' %}">
 </head>
 <body>
 
@@ -13,12 +13,15 @@
         <h1>PROFILE</h1>
     </div>
 
+    <!-- Navigation Buttons -->
+    <button onclick="window.location.href='{% url 'Dashboard:user_dash' %}'">User Dashboard</button>
+
     <div class="BodyDiv">
         <h2>Hello {{ user.f_name }} {{ user.l_name }}</h2>
         
         <!-- Displaying basic user information -->
         <p><strong>Name:</strong> {{ user.f_name }} {{ user.l_name }}</p>
-        <p><strong>Username:</strong> {{ user.u_name }}</p>
+        <p><strong>Username:</strong> {{ user.u_name }}</p>n
         <p><strong>Birthday:</strong> {{ user.dob }}</p>
         <p><strong>Gender:</strong> {{ user.gender }}</p>
 
@@ -33,7 +36,7 @@
             <p>No profile photo uploaded.</p>
         {% endif %}
 
-        <form method="POST" enctype="multipart/form-data" action="{% url 'change_profile_photo' %}">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'MyAccount:change_profile_photo' %}">
             {% csrf_token %}
             <label for="new_photo">Upload New Profile Photo:</label>
             <input type="file" name="new_photo" accept="image/*"><br>
@@ -41,7 +44,7 @@
         </form>
 
         {% if user.photo %}
-            <form method="POST" action="{% url 'delete_profile_photo' %}">
+            <form method="POST" action="{% url 'MyAccount:delete_profile_photo' %}">
                 {% csrf_token %}
                 <button type="submit">Delete Profile Photo</button>
             </form>
@@ -49,7 +52,7 @@
 
         <!-- Profile Bio -->
         <h3>Profile Bio</h3>
-        <form method="POST" action="{% url 'change_bio' %}">
+        <form method="POST" action="{% url 'MyAccount:change_bio' %}">
             {% csrf_token %}
             <label for="new_bio">Profile Bio:</label><br>
             <textarea name="new_bio" rows="4" cols="50">{{ user.bio }}</textarea><br>
@@ -58,7 +61,7 @@
 
         <!-- Change Username -->
         <h3>Change Username</h3>
-        <form method="POST" action="{% url 'change_username' %}">
+        <form method="POST" action="{% url 'MyAccount:change_username' %}">
             {% csrf_token %}
             <label for="new_username">New Username:</label>
             <input type="text" name="new_username" value="{{ user.u_name }}"><br>
@@ -67,18 +70,22 @@
 
         <!-- Change Password -->
         <h3>Change Password</h3>
-        <form method="POST" action="{% url 'change_password' %}">
+        <form method="POST" action="{% url 'MyAccount:change_password' %}">
             {% csrf_token %}
-            <label for="new_password">New Password:</label>
-            <input type="password" name="new_password"><br>
+            <div>
+                <label for="old_password">Old Password:</label>
+                <input type="password" id="old_password" name="old_password" required>
+            </div>
+            <div>
+                <label for="new_password">New Password:</label>
+                <input type="password" id="new_password" name="new_password" required>
+            </div>
+            <div>
+                <label for="confirm_password">Confirm New Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
             <button type="submit">Change Password</button>
         </form>
-
-        <!-- Navigation buttons for Preferences and Progress -->
-        <div class="NavigationButtons">
-            <a href="{% url 'preferences' %}" class="btn">Preferences</a>
-            <a href="{% url 'progress' %}" class="btn">Progress</a>
-        </div>
 
     </div>
 
