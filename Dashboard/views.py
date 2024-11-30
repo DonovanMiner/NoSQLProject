@@ -35,7 +35,7 @@ def GetRenderQuery(u_id, workout_type, metrics):
         #print(f'UID QUERY DEBUG: {type(u_id)} {u_id}')
         #print(f'GET QUERY DEBUG:\nWorkout: {workout_type}\nMetrics: {metrics}\n')
 
-        df = user_fitness_data.find({"user_id" : u_id['user_id'], "workout_type" : workout_type}).sort([("date", -1)])
+        df = user_fitness_data.find({"user_id" : u_id['user_id'], "workout_type" : workout_type}).sort({"date" : -1})
         df = [(doc['date'], doc[metrics[0]]) for doc in df] #add if statement for additional metrics in list, make metrics[0] x-axis/values other than date 
         return pd.DataFrame(df)
         #debug
@@ -45,8 +45,10 @@ def GetRenderQuery(u_id, workout_type, metrics):
 
     elif(len(metrics) == 3):
         pass #add division process - metric 1 divided by metric 2 to get m1 per m2
-        df = user_fitness_data.find({'user_id' : u_id['user_id']})
-        df = [[doc['date'], doc[metrics[0]], doc[metrics[1]]] for doc in df]
+        df = user_fitness_data.find({'user_id' : u_id['user_id'], 'workout_type' : workout_type}).sort({'date' : -1})
+        df = pd.DataFrame([[doc['date'], doc[metrics[0]], doc[metrics[1]]] for doc in df])
+        df[1] = df[1] / df[2]
+        
         #divide
         
 
