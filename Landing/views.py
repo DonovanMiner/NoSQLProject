@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 from datetime import datetime
+from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 
 from NoSQLProject.utils import user_fitness_data, users #import clinet, db as well?
@@ -96,9 +97,11 @@ def login_signup(request):
     
     return render(request, 'Landing/login_signup.html', {'heights': heights})
 
-##### check this
 def dashboard(request):
     user_id = request.session.get('user_id') 
+    if not user_id:  # <-- Check if the user is logged in, otherwise redirect
+        return redirect('Landing:login_signup')  # <-- Redirect if no user found in session
+    
     user = users.find_one({'user_id': user_id})
 
     if user:
@@ -108,5 +111,5 @@ def dashboard(request):
         context = {'user_name': user_name, 'progress': progress}
         return render(request, 'Landing/dashboard.html', context)
     else:
-        return redirect('Landing:login_signup')  # If no user found, redirect to login
+        return redirect('Landing:login_signup')  # <-- If no user found, redirect to login
     return render(request, 'Landing/dashboard.html', context)
