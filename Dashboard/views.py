@@ -32,7 +32,7 @@ def GetQuery(u_id, workout_type, metrics):
     
     #print(f'UID QUERY DEBUG: {type(u_id)} {u_id}')
     #print(f'GET QUERY DEBUG:\nWorkout: {workout_type}\nMetrics: {metrics}\n')
-    df = user_fitness_data.find({"user_id" : u_id['user_id'], "workout_type" : workout_type}).sort({"date" : -1})
+    df = user_fitness_data.find({"user_id": u_id['user_id'], "workout_type": workout_type}).sort([("date", -1)])
     df = [(doc['date'], doc[metrics[0]]) for doc in df] #add if statement for additional metrics in list, make metrics[0] x-axis/values other than date 
     df = pd.DataFrame(df)
     #df[1] = df[1] / (df[2]/60)
