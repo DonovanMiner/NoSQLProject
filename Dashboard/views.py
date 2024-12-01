@@ -28,42 +28,70 @@ def FormatDate(date):
     
 
 
-def GetRenderQuery(u_id, workout_type, metrics):
+def GetDateRenderQuery(u_id, workout_type, metrics):
     
-    if(len(metrics) == 2):
-
-        #print(f'UID QUERY DEBUG: {type(u_id)} {u_id}')
-        #print(f'GET QUERY DEBUG:\nWorkout: {workout_type}\nMetrics: {metrics}\n')
-
+    print(f'UID QUERY DEBUG: {type(u_id)} {u_id}')
+    print(f'GET QUERY DEBUG:\nWorkout: {workout_type}\nMetrics: {metrics}\n')
+    
+    if(workout_type == 'All'):
+        df = user_fitness_data.find({"user_id" : u_id['user_id']}).sort({"date" : -1})
+    else:
         df = user_fitness_data.find({"user_id" : u_id['user_id'], "workout_type" : workout_type}).sort({"date" : -1})
+    
+    if(len(metrics) == 1):
         df = [(doc['date'], doc[metrics[0]]) for doc in df] #add if statement for additional metrics in list, make metrics[0] x-axis/values other than date 
         return pd.DataFrame(df)
-        #debug
         #df = pd.DataFrame(df)
         #df[1] = df[1] / (df[2]/60)
         #print(f'GET QUERY DATAFRAME CHECK:\n {df}')
 
-    elif(len(metrics) == 3):
-        pass #add division process - metric 1 divided by metric 2 to get m1 per m2
+    elif(len(metrics) == 2):
         df = user_fitness_data.find({'user_id' : u_id['user_id'], 'workout_type' : workout_type}).sort({'date' : -1})
         df = pd.DataFrame([[doc['date'], doc[metrics[0]], doc[metrics[1]]] for doc in df])
+        if(metrics[0] == 'active_minutes'):
+            df[1] = df[1] / 60
+        elif(metrics[1] == 'active_minutes'):
+            df[2] = df[2] / 60
+        print(f'DOUBLE METRICS CHECK:\n{df}')
+            
         df[1] = df[1] / df[2]
-        
-        #divide
+        return df
         
 
-def RenderPlot(u_id, u_name, workout_type, metrics):
+def GetCountRenderQuery(u_id, workout_type, metrics):
     
-    df = GetRenderQuery(u_id, workout_type, metrics)
+    if(workout_type == 'All'):
+        df = user_fitness_data.aggregate([ {"$match" : {"user_id" : u_id['user_id']} }, {'$group' : {'_id' : f"${metrics[0]}", 'sumTotal' : {'$sum' : 1} } }, {"$sort" : {'sumTotal' : -1} } ])
+    else:    
+        df = user_fitness_data.aggregate([ {"$match" : {"user_id" : u_id['user_id'], "workout_type" : workout_type} }, {'$group' : {'_id' : f"${metrics[0]}", 'sumTotal' : {'$sum' : 1} } }, {"$sort" : {'sumTotal' : -1} } ])
+
+    df = pd.DataFrame(doc for doc in df)
+    #print(f'DATAFRAME COUNT QUERY CHECK:\n{df}')
+    return df
+        
+
+def RenderPlot(u_id, u_name, workout_type, metrics, agg_select):
     
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=df[0], y=df[1]))
-    fig.update_layout(title=f'{u_name} {workout_type}')
-    fig.update_xaxes(title='Date')
-    fig.update_yaxes(title=f'{metrics[0]}')
-    fig = fig.to_html()
-    
-    return fig
+
+    if(agg_select == 'date_agg'):
+        df = GetDateRenderQuery(u_id, workout_type, metrics)
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=df[0], y=df[1]))
+        fig.update_layout(title=f'{u_name} Over Time for {workout_type}, {metrics}')
+        fig.update_xaxes(title='Date')
+        fig.update_yaxes(title=f'{metrics[0]}')
+        fig = fig.to_html()
+        return fig
+
+    elif(agg_select == 'count_agg'):
+        df = GetCountRenderQuery(u_id, workout_type, metrics)
+        fig = go.Figure()
+        fig.add_trace(go.Bar(x=df['_id'], y=df['sumTotal']))
+        fig.update_layout(title=f'{u_name} Counts for {workout_type}, {metrics}')
+        fig.update_xaxes(title=f'{metrics[0]}')
+        fig.update_yaxes(title='Counts')
+        fig = fig.to_html()
+        return fig
 
 
 
@@ -92,11 +120,12 @@ def user_dashboard(request):
 
     init_workout_type = "Walking" 
     init_metric = ["active_minutes"]
-    
-    fig1 = RenderPlot(u_id, u_name, init_workout_type, init_metric)
-    fig2 = RenderPlot(u_id, u_name, init_workout_type, init_metric)
-    fig3 = RenderPlot(u_id, u_name, init_workout_type, init_metric)
-    fig4 = RenderPlot(u_id, u_name, init_workout_type, init_metric)
+    init_agg_select = 'date_agg'
+
+    fig1 = RenderPlot(u_id, u_name, init_workout_type, init_metric, init_agg_select)
+    fig2 = RenderPlot(u_id, u_name, init_workout_type, init_metric, init_agg_select)
+    fig3 = RenderPlot(u_id, u_name, init_workout_type, init_metric, init_agg_select)
+    fig4 = RenderPlot(u_id, u_name, init_workout_type, init_metric, init_agg_select)
     
     request.session['fig1'] = fig1
     request.session['fig2'] = fig2
@@ -140,26 +169,37 @@ def update_user_dashboard(request):
         metric_4.append(request.POST.get('metric_4_1'))
         #print(f'FORM CHECK: {metric_1}')
         
-        if(request.POST.get('metric_1_2') != 'None'):
-            metric_1.append(request.POST.get('metric_1_2'))
-        if(request.POST.get('metric_2_2') != 'None'):
-            metric_1.append(request.POST.get('metric_2_2'))
-        if(request.POST.get('metric_3_2') != 'None'):
-            metric_1.append(request.POST.get('metric_3_2'))
-        if(request.POST.get('metric_4_2') != 'None'):
-            metric_1.append(request.POST.get('metric_4_2'))
+        agg_select_1 = request.POST.get('agg_select_1')
+        agg_select_2 = request.POST.get('agg_select_2')
+        agg_select_3 = request.POST.get('agg_select_3')
+        agg_select_4 = request.POST.get('agg_select_4')
         
+    
+        if(request.POST.get('metric_1_2') != 'none'):
+            metric_1.append(request.POST.get('metric_1_2'))
+        if(request.POST.get('metric_2_2') != 'none'):
+            metric_2.append(request.POST.get('metric_2_2'))
+        if(request.POST.get('metric_3_2') != 'none'):
+            metric_3.append(request.POST.get('metric_3_2'))
+        if(request.POST.get('metric_4_2') != 'none'):
+            metric_4.append(request.POST.get('metric_4_2'))
+                
+        #elif(agg_select == 'count_agg'):
+        #   print(f'COUNT AGG CHECK')
 
-        fig1 = RenderPlot(u_id, u_name, workout_type_1, metric_1)
-        fig2 = RenderPlot(u_id, u_name, workout_type_2, metric_2)
-        fig3 = RenderPlot(u_id, u_name, workout_type_3, metric_3)
-        fig4 = RenderPlot(u_id, u_name, workout_type_4, metric_4)
+
+        fig1 = RenderPlot(u_id, u_name, workout_type_1, metric_1, agg_select_1)
+        fig2 = RenderPlot(u_id, u_name, workout_type_2, metric_2, agg_select_2)
+        fig3 = RenderPlot(u_id, u_name, workout_type_3, metric_3, agg_select_3)
+        fig4 = RenderPlot(u_id, u_name, workout_type_4, metric_4, agg_select_4)
  
         request.session['fig1'] = fig1
         request.session['fig2'] = fig2
         request.session['fig3'] = fig3
         request.session['fig4'] = fig4
         
+        #request.session[''] = 
+
     else:
         fig1 = request.session.get('fig1')
         fig2 = request.session.get('fig2')

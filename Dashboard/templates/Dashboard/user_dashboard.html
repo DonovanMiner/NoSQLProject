@@ -33,6 +33,9 @@
 
                 <form method='post' action="{% url 'Dashboard:update_user_dash' %}">
                     {% csrf_token %}
+
+
+
                     <h2>Chart 1</h2>
                     <label for="workout_type_1">Exercise Type:</label>
                     <select name="workout_type_1" id="workout_type_1">
@@ -42,7 +45,8 @@
                         <option value="Gym Workout">Gym</option>
                         <option value="Yoga">Yoga</option>
                         <option value="Walking">Walking</option>
-                        <option value="None">None</option>
+                        <option value="None">Not Specified</option>
+                        <option value="All">All</option>
                     </select>
                     &emsp;
                     <label for="metric_1_1">Metric:</label>
@@ -72,6 +76,11 @@
                         <option value="weather_conditions">Weather</option>
                     </select>
                     <br />
+                    <input type="radio" name="agg_select_1" id="date_agg" value="date_agg" checked="checked" />
+                    <label for="date_agg">By Date</label>
+                    <input type="radio" name="agg_select_1" id="count_agg" value="count_agg"/>
+                    <label for="count_agg">By Count</label>
+                    <br />
 
                     <h2>Chart 2</h2>
                     <label for="workout_type_2">Exercise Type:</label>
@@ -82,7 +91,8 @@
                         <option value="Gym Workout">Gym</option>
                         <option value="Yoga">Yoga</option>
                         <option value="Walking">Walking</option>
-                        <option value="None">None</option>
+                        <option value="None">Not Specified</option>
+                        <option value="All">All</option>
                     </select>
                     &emsp;
                     <label for="metric_2_1">Metric:</label>
@@ -112,6 +122,11 @@
                         <option value="weather_conditions">Weather</option>
                     </select>
                     <br />
+                    <input type="radio" name="agg_select_2" id="date_agg" value="date_agg" checked="checked" />
+                    <label for="date_agg">By Date</label>
+                    <input type="radio" name="agg_select_2" id="count_agg" value="count_agg"/>
+                    <label for="count_agg">By Count</label>
+                    <br />
 
                     <h2>Chart 3</h2>
                     <label for="workout_type_3">Exercise Type:</label>
@@ -122,7 +137,8 @@
                         <option value="Gym Workout">Gym</option>
                         <option value="Yoga">Yoga</option>
                         <option value="Walking">Walking</option>
-                        <option value="None">None</option>
+                        <option value="None">Not Specified</option>
+                        <option value="All">All</option>
                     </select>
                     &emsp;
                     <label for="metric_3_1">Metric:</label>
@@ -152,6 +168,11 @@
                         <option value="weather_conditions">Weather</option>
                     </select>
                     <br />
+                    <input type="radio" name="agg_select_3" id="date_agg" value="date_agg" checked="checked" />
+                    <label for="date_agg">By Date</label>
+                    <input type="radio" name="agg_select_3" id="count_agg" value="count_agg"/>
+                    <label for="count_agg">By Count</label>
+                    <br />
 
                     <h2>Chart 4</h2>
                     <label for="workout_type_4">Exercise Type:</label>
@@ -162,7 +183,8 @@
                         <option value="Gym Workout">Gym</option>
                         <option value="Yoga">Yoga</option>
                         <option value="Walking">Walking</option>
-                        <option value="None">None</option>
+                        <option value="None">Not Specified</option>
+                        <option value="All">All</option>
                     </select>
                     &emsp;
                     <label for="metric_4_1">Metric:</label>
@@ -191,13 +213,19 @@
                         <option value="steps">Steps</option>
                         <option value="weather_conditions">Weather</option>
                     </select>
+                    <br />
+                    <input type="radio" name="agg_select_4" id="date_agg" value="date_agg" checked="checked" />
+                    <label for="date_agg">By Date</label>
+                    <input type="radio" name="agg_select_4" id="count_agg" value="count_agg"/>
+                    <label for="count_agg">By Count</label>
                     <br /><br />
 
                     <!--<input type="hidden" name="u_id" id="u_id" value="{{ u_id }}" />
                     <input type="hidden" name="u_name" id="u_name" value="{{ u_name }}" />-->
                     <input type="submit" value="Submit" />
                 </form>
-
+                
+                <p>Notes: When a second metric is selected, it acts as 'metric 1 per metric 2'. When "Duration" specifically is selected, it is in minutes for metric one, and hours for metric two.</p>
             </div>
         </div>
     </div>
