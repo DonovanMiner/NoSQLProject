@@ -36,7 +36,7 @@ def GetDateRenderQuery(u_id, workout_type, metrics):
     if(workout_type == 'All'):
         df = user_fitness_data.find({"user_id" : u_id['user_id']}).sort({"date" : -1})
     else:
-        df = user_fitness_data.find({"user_id" : u_id['user_id'], "workout_type" : workout_type}).sort({"date" : -1})
+        df = user_fitness_data.find({"user_id": u_id['user_id'], "workout_type": workout_type}).sort([("date", -1)]) #<---- change dict to a list of tuples
     
     if(len(metrics) == 1):
         df = [(doc['date'], doc[metrics[0]]) for doc in df] #add if statement for additional metrics in list, make metrics[0] x-axis/values other than date 
