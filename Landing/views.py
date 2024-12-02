@@ -39,7 +39,7 @@ def login_signup(request):
             
             if user and check_password(password, user['password']):
                 request.session['user_id'] = user['user_id']
-                return redirect('Dashboard:user_dashboard') 
+                return redirect('Dashboard:user_dashboard')  # Redirect to user_dashboard after login
             else:
                 messages.error(request, "Invalid username or password")
                 return redirect('Landing:login_signup')
@@ -63,13 +63,13 @@ def login_signup(request):
             # capturing the account creation date
             date_of_creation = datetime.now()
 
-            # Checking up if email already exists in the MongoDB 'users' collection
+            # Checking if email already exists in the MongoDB 'users' collection
             existing_user = users.find_one({'email_addr': email_addr})
             if existing_user:
                 messages.error(request, "Email already in use")
                 return redirect('Landing:login_signup')
             
-            #hash the password before saving it - i do not think its necessary, but the best practices do it for production environment
+            # Hash the password before saving it
             hashed_password = make_password(password)
 
             # Create a new user document in MongoDB:
@@ -79,37 +79,54 @@ def login_signup(request):
                 'f_name': f_name,
                 'l_name': l_name,
                 'email_addr': email_addr,
-                'password': hashed_password,  #Should we consider hashing the passwords??
+                'password': hashed_password,
                 'gender': gender,
                 'dob': dob,
                 'height': height,
                 'weight': weight,
-                'date_of_creation': date_of_creation, ##shoudl we save the time of creation??
+                'date_of_creation': date_of_creation,
             }
 
-            # Store the new_user_data into the users collection in mongodb
+            # Store the new_user_data into the users collection in MongoDB
             users.insert_one(new_user_data)
             
-            # Log the new user in automatically
+            # Log the new user in automatically by setting the session
             request.session['user_id'] = new_user_data['user_id']
 
+            # Redirect to the user_dashboard after successful signup
             return redirect('Dashboard:user_dashboard')
-    
+
     return render(request, 'Landing/login_signup.html', {'heights': heights})
 
-def dashboard(request):
-    user_id = request.session.get('user_id') 
-    if not user_id:  # <-- Check if the user is logged in, otherwise redirect
-        return redirect('Landing:login_signup')  # <-- Redirect if no user found in session
-    
-    user = users.find_one({'user_id': user_id})
 
-    if user:
-        user_name = user['f_name']
-        user_progress = user_fitness_data.find_one({'user_id': user_id}) 
-        progress = user_progress.get('progress', {'completed_goals': 0, 'total_goals': 0}) ### check this
-        context = {'user_name': user_name, 'progress': progress}
-        return render(request, 'Landing/dashboard.html', context)
-    else:
-        return redirect('Landing:login_signup')  # <-- If no user found, redirect to login
-    return render(request, 'Landing/dashboard.html', context)
+# def dashboard(request):
+
+#     user_id = request.session.get('user_id') 
+
+#     if not user_id:  # <-- Check if the user is logged in, otherwise redirect
+
+#         return redirect('Landing:login_signup')  # <-- Redirect if no user found in session
+
+    
+
+#     user = users.find_one({'user_id': user_id})
+
+
+
+#     if user:
+
+#         user_name = user['f_name']
+
+#         user_progress = user_fitness_data.find_one({'user_id': user_id}) 
+
+#         progress = user_progress.get('progress', {'completed_goals': 0, 'total_goals': 0}) ### check this
+
+#         context = {'user_name': user_name, 'progress': progress}
+
+#         return render(request, 'Landing/dashboard.html', context)
+
+#     else:
+
+#         return redirect('Landing:login_signup')  # <-- If no user found, redirect to login
+
+#     return render(request, 'Landing/dashboard.html', context)
