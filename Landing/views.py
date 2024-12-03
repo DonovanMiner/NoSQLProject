@@ -20,6 +20,7 @@ def how_it_works(request):
 
 # Login/Sign-up page view
 def login_signup(request):
+    print("Here 1")
     # Define the height drop down list options range from 4'0" to 7'11"
     heights = []
     for ft in range(4, 8):  
@@ -46,7 +47,8 @@ def login_signup(request):
         
         # Handling sign-up:
         elif action == 'signup':
-            u_name = request.POST['u_name']
+            print("Here 2")
+            u_name = request.POST['username']
             f_name = request.POST['f_name']
             l_name = request.POST['l_name']
             email_addr = request.POST['email_addr']
@@ -55,6 +57,7 @@ def login_signup(request):
             dob = request.POST['dob']
             height = request.POST['height']  
             weight = request.POST['weight']
+        
             
             # Find and assign the next available number for as the user_id for this new_user
             last_user = users.find().sort("user_id", -1).limit(1)
@@ -86,6 +89,7 @@ def login_signup(request):
                 'weight': weight,
                 'date_of_creation': date_of_creation,
             }
+
 
             # Store the new_user_data into the users collection in MongoDB
             users.insert_one(new_user_data)
