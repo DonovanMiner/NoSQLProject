@@ -5,7 +5,7 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 
-from NoSQLProject.utils import user_fitness_data, users #import clinet, db as well?
+from NoSQLProject.utils import user_fitness_data, users
 
 # Home page view (before login)
 def home(request):
@@ -40,15 +40,15 @@ def login_signup(request):
             
             if user and check_password(password, user['password']):
                 request.session['user_id'] = user['user_id']
-                return redirect('Dashboard:user_dashboard')  # Redirect to user_dashboard after login
+                return redirect('Dashboard:user_dash')  # Redirect to user_dashboard after login
             else:
                 messages.error(request, "Invalid username or password")
-                return redirect('Landing:login_signup')
+                #return redirect('Landing:login_signup')
         
         # Handling sign-up:
         elif action == 'signup':
             print("Here 2")
-            u_name = request.POST['username']
+            username = request.POST['username']
             f_name = request.POST['f_name']
             l_name = request.POST['l_name']
             email_addr = request.POST['email_addr']
@@ -75,7 +75,7 @@ def login_signup(request):
             # Create a new user document in MongoDB:
             new_user_data = {
                 'user_id': new_user_id,
-                'u_name': u_name,
+                'u_name': username,
                 'f_name': f_name,
                 'l_name': l_name,
                 'email_addr': email_addr,
@@ -87,47 +87,23 @@ def login_signup(request):
                 'date_of_creation': date_of_creation,
             }
 
-
             # Store the new_user_data into the users collection in MongoDB
             users.insert_one(new_user_data)
+
+             # Fetch the user to set the session (just in case the previous code didn't find the user)
+            user = users.find_one({'u_name': username})
+
+            # Ensure the user was found in the database
+            #if user and check_password(password, user['password']):
+            if user:
+                request.session['u_name'] = u_name
+                request.session['user_id'] = user.get['user_id']  # Set the session ID
+                
+                return redirect('Dashboard:user_dash')  # Redirect to the user_dashboard after successful signup
             
-            # Log the new user in automatically by setting the session
-            request.session['user_id'] = new_user_data['user_id']
-
-            # Redirect to the user_dashboard after successful signup
-            return redirect('Dashboard:user_dashboard')
-
+            else:
+                # If the user isn't found, show an error message
+                messages.error(request, "Something went wrong during sign-up.")
+                return redirect('Landing:login_signup')
+            
     return render(request, 'Landing/login_signup.html', {'heights': heights})
-
-
-# def dashboard(request):
-
-#     user_id = request.session.get('user_id') 
-
-#     if not user_id:  # <-- Check if the user is logged in, otherwise redirect
-
-#         return redirect('Landing:login_signup')  # <-- Redirect if no user found in session
-
-    
-
-#     user = users.find_one({'user_id': user_id})
-
-
-
-#     if user:
-
-#         user_name = user['f_name']
-
-#         user_progress = user_fitness_data.find_one({'user_id': user_id}) 
-
-#         progress = user_progress.get('progress', {'completed_goals': 0, 'total_goals': 0}) ### check this
-
-#         context = {'user_name': user_name, 'progress': progress}
-
-#         return render(request, 'Landing/dashboard.html', context)
-
-#     else:
-
-#         return redirect('Landing:login_signup')  # <-- If no user found, redirect to login
-
-#     return render(request, 'Landing/dashboard.html', context)
