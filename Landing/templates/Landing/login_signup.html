@@ -47,7 +47,7 @@
         <!---SIGNUP FORM-->
         <div id="signupForm" style="display: none;">
             <h2>Don't have an account? Sign Up</h2>
-            <form method="post" action="{% url 'Landing:login_signup' %}">
+            <form method="post" action="{% url 'Dashboard:user_dash' %}">
                 {% csrf_token %}
 
                 <label for="username">Username:</label> 

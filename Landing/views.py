@@ -8,28 +8,34 @@ from django.contrib.auth.hashers import check_password
 from NoSQLProject.utils import user_fitness_data, users
 
 # Home page view (before login)
+
+
 def home(request):
     res = user_fitness_data.find().limit(10)
-    context = {'res' : res}
+    context = {'res': res}
     return render(request, 'Landing/home.html', context)
 
 # how it works page view
+
+
 def how_it_works(request):
-    context = {} #this will be updated later since it will not use data
+    context = {}  # this will be updated later since it will not use data
     return render(request, 'Landing/how_it_works.html', context)
 
 # Login/Sign-up page view
+
+
 def login_signup(request):
     print("Here 1")
     # Define the height drop down list options range from 4'0" to 7'11"
     heights = []
-    for ft in range(4, 8):  
-        for in_ in range(0, 12): 
-            heights.append(f"{ft}' {in_:02d}\"")  
+    for ft in range(4, 8):
+        for in_ in range(0, 12):
+            heights.append(f"{ft}' {in_:02d}\"")
 
     if request.method == "POST":
         action = request.POST.get('action')
-        
+
         # Handling login:
         if action == 'login':
             username = request.POST['username']
@@ -37,14 +43,15 @@ def login_signup(request):
 
             # Find the user in the MongoDB collection based on the u_name (username)
             user = users.find_one({'u_name': username})
-            
+
             if user and check_password(password, user['password']):
                 request.session['user_id'] = user['user_id']
-                return redirect('Dashboard:user_dash')  # Redirect to user_dashboard after login
+                # Redirect to user_dashboard after login
+                return redirect('Dashboard:user_dash')
             else:
                 messages.error(request, "Invalid username or password")
-                #return redirect('Landing:login_signup')
-        
+                return redirect('Landing:login_signup')
+
         # Handling sign-up:
         elif action == 'signup':
             print("Here 2")
@@ -55,14 +62,13 @@ def login_signup(request):
             password = request.POST['password']
             gender = request.POST['gender']
             dob = request.POST['dob']
-            height = request.POST['height']  
+            height = request.POST['height']
             weight = request.POST['weight']
-        
-            
+
             # Find and assign the next available number for as the user_id for this new_user
-            last_user = users.find().sort("user_id", -1).limit(1)
-            new_user_id = last_user[0]['user_id'] + 1 if last_user.count() > 0 else 1
-            
+            last_user = users.find_one(sort=[("user_id", -1)])
+            new_user_id = last_user['user_id'] + 1 if last_user else 1
+
             # capturing the account creation date
             date_of_creation = datetime.now()
 
@@ -90,20 +96,19 @@ def login_signup(request):
             # Store the new_user_data into the users collection in MongoDB
             users.insert_one(new_user_data)
 
-             # Fetch the user to set the session (just in case the previous code didn't find the user)
+            # Fetch the user to set the session
             user = users.find_one({'u_name': username})
 
-            # Ensure the user was found in the database
-            #if user and check_password(password, user['password']):
             if user:
-                request.session['u_name'] = u_name
-                request.session['user_id'] = user.get['user_id']  # Set the session ID
-                
-                return redirect('Dashboard:user_dash')  # Redirect to the user_dashboard after successful signup
-            
+                request.session['u_name'] = new_user_data['u_name']
+                request.session['user_id'] = user.get('user_id')
+                print("Redirecting to Dashboard")
+                # Redirect to the user_dashboard after successful signup
+                return redirect('Dashboard:user_dash')
+
             else:
                 # If the user isn't found, show an error message
                 messages.error(request, "Something went wrong during sign-up.")
                 return redirect('Landing:login_signup')
-            
+
     return render(request, 'Landing/login_signup.html', {'heights': heights})
