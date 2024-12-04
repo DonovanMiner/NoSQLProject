@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from datetime import datetime
 from django.contrib import messages
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import check_password
 
 from NoSQLProject.utils import user_fitness_data, users #import clinet, db as well?
 
@@ -71,9 +71,6 @@ def login_signup(request):
             if existing_user:
                 messages.error(request, "Email already in use")
                 return redirect('Landing:login_signup')
-            
-            # Hash the password before saving it
-            hashed_password = make_password(password)
 
             # Create a new user document in MongoDB:
             new_user_data = {
@@ -82,7 +79,7 @@ def login_signup(request):
                 'f_name': f_name,
                 'l_name': l_name,
                 'email_addr': email_addr,
-                'password': hashed_password,
+                'password': password,
                 'gender': gender,
                 'dob': dob,
                 'height': height,
