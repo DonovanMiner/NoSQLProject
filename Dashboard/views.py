@@ -21,7 +21,7 @@ def FormatDate(date):
 
     month, day, year = date.split(' ', 2)
     month = int(month_lookup[month])
-    day = int(month)
+    day = int(day)
     year = int(year)
 
     return datetime.datetime(year, month, day, 0, 0, 0)
@@ -363,9 +363,10 @@ def CreateNewDoc(doc_info, u_id):
                     value = value.strip()
 
             insert_fields.update({field : value})
-            #print(f'CREATE DOC CHECK: {insert_fields}')
-            
-    insert_fields.update({'user_id' : u_id})
+    
+         
+    insert_fields.update({'user_id' : u_id['user_id']})
+    print(insert_fields)
     user_fitness_data.insert_one(insert_fields)
 
 
