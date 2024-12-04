@@ -100,8 +100,8 @@ def login_signup(request):
             user = users.find_one({'u_name': username})
 
             if user:
-                request.session['u_name'] = new_user_data['u_name']
-                request.session['user_id'] = user.get('user_id')
+                request.session['u_name'] = username
+                request.session['u_id'] = new_user_id
                 print("Redirecting to Dashboard")
                 # Redirect to the user_dashboard after successful signup
                 return redirect('Dashboard:user_dash')

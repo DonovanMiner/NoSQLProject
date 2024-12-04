@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 
-from pymongo import DeleteOne, client_session
+from pymongo import client_session
 from bson.objectid import ObjectId
 from NoSQLProject.utils import user_fitness_data, users
 
@@ -107,10 +107,22 @@ def user_dashboard(request):
     
     #get username/password and check it in database
     #query u_id from u_nmae, pwd, put in context
+    u_name = ''
+    password = ''
+    u_id = ''
 
-    u_name = request.POST.get('username')
-    password = request.POST.get('password')
-    u_id = users.find_one({"u_name" : u_name, "password" : password}, {"_id" : 0, "user_id" : 1})
+    if(request.POST.get('username')):
+        print('Here 1')
+        u_name = request.POST.get('username')
+        password = request.POST.get('password')
+        u_id = users.find_one({"u_name" : u_name, "password" : password}, {"_id" : 0, "user_id" : 1})
+    else:
+        print('Here 2')
+        u_name = request.session.get('u_name')
+        tmp = request.session.get('u_id')
+        u_id = {'user_id' : tmp}
+        
+
     print(f'U_ID CHECK: {type(u_id)} {u_id}')
     print(f'UNAME CHECK: {type(u_name)} {u_name}')
     print(f'PASSWORD CHECK: {type(password)} {password}')
