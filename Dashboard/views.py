@@ -160,9 +160,9 @@ def GET_MOTIVATED(u_id, w1, w2, w3, w4, l1, l2, l3, l4):
         #print(f'AVG 1 CHECK:\n{avg1}')
         #print(f'MOST RECENT VALUE: {most_recent1[0][l1[0]]}')
 
-        if(float(most_recent1[0][l1[0]]) == float(avg1)):
+        if(float(most_recent1[0][l1[0]]) == float(avg1.iloc[0])):
             suggestions.append(sugg_list[l1[0]][1])
-        elif(float(most_recent1[0][l1[0]]) > float(avg1)):
+        elif(float(most_recent1[0][l1[0]]) > float(avg1.iloc[0])):
             suggestions.append(sugg_list[l1[0]][0])
         else:
             suggestions.append(sugg_list[l1[0]][2])
@@ -175,9 +175,9 @@ def GET_MOTIVATED(u_id, w1, w2, w3, w4, l1, l2, l3, l4):
         avg2 = pd.DataFrame(data=df2.loc[::-1, 1]).rolling(7).mean()
         avg2 = avg2.loc[0]
 
-        if(float(most_recent2[0][l2[0]]) == float(avg2)):
+        if(float(most_recent2[0][l2[0]]) == float(avg2.iloc[0])):
             suggestions.append(sugg_list[l2[0]][1])
-        elif(float(most_recent2[0][l2[0]]) > float(avg2)):
+        elif(float(most_recent2[0][l2[0]]) > float(avg2.iloc[0])):
             suggestions.append(sugg_list[l2[0]][0])
         else:
             suggestions.append(sugg_list[l2[0]][2])
@@ -190,9 +190,9 @@ def GET_MOTIVATED(u_id, w1, w2, w3, w4, l1, l2, l3, l4):
         avg3 = pd.DataFrame(data=df3.loc[::-1, 1]).rolling(7).mean()
         avg3 = avg3.loc[0]
 
-        if(float(most_recent3[0][l3[0]]) == float(avg3)):
+        if(float(most_recent3[0][l3[0]]) == float(avg3.iloc[0])):
             suggestions.append(sugg_list[l3[0]][1])
-        elif(float(most_recent3[0][l3[0]])> float(avg3)):
+        elif(float(most_recent3[0][l3[0]])> float(avg3.iloc[0])):
             suggestions.append(sugg_list[l3[0]][0])
         else:
             suggestions.append(sugg_list[l3[0]][2])
@@ -205,9 +205,9 @@ def GET_MOTIVATED(u_id, w1, w2, w3, w4, l1, l2, l3, l4):
         avg4 = pd.DataFrame(data=df4.loc[::-1, 1]).rolling(7).mean()
         avg4 = avg4.loc[0]
 
-        if(float(most_recent4[0][l4[0]]) == float(avg4)):
+        if(float(most_recent4[0][l4[0]]) == float(avg4.iloc[0])):
             suggestions.append(sugg_list[l4[0]][1])
-        elif(float(most_recent4[0][l4[0]]) > float(avg4)):
+        elif(float(most_recent4[0][l4[0]]) > float(avg4.iloc[0])):
             suggestions.append(sugg_list[l4[0]][0])
         else:
             suggestions.append(sugg_list[l4[0]][2])
@@ -234,8 +234,7 @@ def user_dashboard(request):
         print('Here 1')
         u_name = request.POST.get('username')
         password = request.POST.get('password')
-        u_id = users.find_one({"u_name": u_name, "password": password}, {
-                              "_id": 0, "user_id": 1})
+        u_id = users.find_one({"u_name": u_name, "password": password}, {"_id": 0, "user_id": 1})
     else:
         print('Here 2')
         u_name = request.session.get('u_name')

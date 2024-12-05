@@ -48,8 +48,7 @@ def login_signup(request):
 
             if user and check_password(password, user['password']):
                 request.session['user_id'] = user['user_id']
-                print(f"User ID saved to session: {
-                      request.session.get('user_id')}")
+                print(f"User ID saved to session: {request.session.get('user_id')}")
                 # Redirect to user_dashboard after login
                 return redirect('Dashboard:user_dash')
             else:
