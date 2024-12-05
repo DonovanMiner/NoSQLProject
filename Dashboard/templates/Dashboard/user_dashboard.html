@@ -234,8 +234,16 @@
                     <input type="submit" value="Submit" />
                 </form>
                 
-                <p>Notes: When a second metric is selected, it acts as 'metric 1 per metric 2'. When "Duration" specifically is selected, it is in minutes for metric one, and hours for metric two.</p>
             </div>
+
+            <h2 style="float: right;"><u>Suggestions</u></h2>
+            {% for suggestion in MOTIVATION %}
+                <p>{{ suggestion }}</p>
+            {% endfor %}
+                
+
+            <p>Notes: When a second metric is selected, it acts as 'metric 1 per metric 2'. When "Duration" specifically is selected, it is in minutes for metric one, and hours for metric two.</p>
+
         </div>
     </div>
 </body>
