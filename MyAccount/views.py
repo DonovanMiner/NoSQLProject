@@ -13,12 +13,14 @@ from NoSQLProject.utils import users  # , user_fitness_data
 # Profile Settings View
 def userprofile(request):
     # Retrieve the user_id from session
-    user_id = request.session.get("u_id")
+    # Adjust based on your session key
+    user_id = request.session.get("user_id")
     if not user_id:
         return HttpResponse("User is not logged in.", status=401)
 
-    # Fetch user data from MongoDB
-    user = users.find_one({"_id": ObjectId(user_id)})
+    # Fetch user data from MongoDB using user_id
+    # Use the appropriate field here
+    user = users.find_one({"user_id": user_id})
 
     if not user:
         return HttpResponse("User not found.", status=404)
