@@ -31,6 +31,7 @@ def GetDateRenderQuery(u_id, workout_type, metrics):
 
     print(f'UID QUERY DEBUG: {type(u_id)} {u_id}')
     print(f'GET QUERY DEBUG:\nWorkout: {workout_type}\nMetrics: {metrics}\n')
+<<<<<<< HEAD
     
     if(workout_type == 'All'):
         df = user_fitness_data.find({"user_id" : u_id['user_id']}).sort({"date" : -1})
@@ -50,6 +51,16 @@ def GetDateRenderQuery(u_id, workout_type, metrics):
         df = user_fitness_data.find({"user_id": u_id['user_id'], "workout_type": workout_type}).sort(
             [("date", -1)])  # <---- change dict to a list of tuples
 
+=======
+
+    if (workout_type == 'All'):
+        df = user_fitness_data.find(
+            {"user_id": u_id['user_id']}).sort({"date": -1})
+    else:
+        df = user_fitness_data.find({"user_id": u_id['user_id'], "workout_type": workout_type}).sort(
+            [("date", -1)])  # <---- change dict to a list of tuples
+
+>>>>>>> 9b0d603f4d9fd0e6ed01c5e6134b004bcbd6159a
     if (len(metrics) == 1):
         # add if statement for additional metrics in list, make metrics[0] x-axis/values other than date
         df = [(doc['date'], doc[metrics[0]]) for doc in df]
@@ -86,6 +97,7 @@ def GetCountRenderQuery(u_id, workout_type, metrics):
     # print(f'DATAFRAME COUNT QUERY CHECK:\n{df}')
     return df
 
+<<<<<<< HEAD
 
 def GetAverageRenderQuery(u_id, workout_type, metrics):
     
@@ -99,6 +111,8 @@ def GetAverageRenderQuery(u_id, workout_type, metrics):
     df[1] = temp[1]
     return df
 
+=======
+>>>>>>> 9b0d603f4d9fd0e6ed01c5e6134b004bcbd6159a
 
 def RenderPlot(u_id, u_name, workout_type, metrics, agg_select):
 
@@ -133,7 +147,6 @@ def RenderPlot(u_id, u_name, workout_type, metrics, agg_select):
         fig.update_yaxes(title=f'{metrics[0]}')
         fig = fig.to_html()
         return fig
-
 
 def default_dashboard(request):
 
