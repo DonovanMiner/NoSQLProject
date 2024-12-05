@@ -14,7 +14,7 @@
     </div>
 
     <div class="LinkBar">
-        <p><a href="{% url 'MyAccount:settings' %}">Settings</a></p>
+        <p><a href="{% url 'MyAccount:settings' %}">Account Settings</a></p>
         <p><a href="{% url 'Dashboard:update_user_dash' %}">Dashboard</a></p>
         <p><a href="{% url 'Landing:home' %}">Log Out</a></p>
     </div>
@@ -27,10 +27,23 @@
             <h2>Hello {{ user.f_name }} {{ user.l_name }}</h2>
             
             <!-- Displaying basic user information -->
-            <p><strong>Name:</strong> {{ user.f_name }} {{ user.l_name }}</p>
+            <p><strong>Name:</strong> {{ user.f_name }}</p>
+            <p><strong>Last Name:</strong>{{ user.l_name }}</p>
             <p><strong>Username:</strong> {{ user.u_name }}</p>n
             <p><strong>Birthday:</strong> {{ user.dob }}</p>
-            <p><strong>Gender:</strong> {{ user.gender }}</p>    
+            <p><strong>Gender:</strong> {{ user.gender }}</p>  
+        </div>    
+            
+        <!-- Editable bio section -->
+        <div class="BioSection">
+            <h3>Bio</h3>
+            <form method="POST" action="{% url 'MyAccount:update_bio' %}">
+                {% csrf_token %}
+                <textarea name="bio" rows="4" cols="50">{{ user.bio|default:'' }}</textarea><br>
+                <button type="submit">Save Bio</button>
+            </form>
+        </div>
+
     </div>
 
     <div class="FooterDiv">

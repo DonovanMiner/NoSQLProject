@@ -1,90 +1,125 @@
-﻿
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f4f4f4;
+}
 
 .HeaderDiv {
-    position: relative;
-    width: calc(100% - 40px);
-    height: fit-content;
-    display: inline-block;
-    background: orange;
-    padding-top: 20px; 
-    padding-bottom: 20px;
-    padding-left: 50px;
-    padding-right: 50px;
-    margin: 20px;
-    /*vertical-align: central;*/
-    /*align-content: center;*/
-    box-sizing: border-box;
-    align-self: center;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 20px;
 }
-
 
 .LinkBar {
-    position: relative;
-    width: calc(100% - 40px);
-    height: 100px;
-    display: inline-block;
-    background: black;
-    padding: 35px 60px;
-    margin-left: 20px;
-    margin-right: 20px;
-    box-sizing: border-box;
-    align-self: center;
+    text-align: center;
+    background-color: #333;
+    color: white;
+    padding: 10px;
 }
 
-    .LinkBar p {
-        font-family: 'Times New Roman', Times, serif;
-        color: floralwhite;
-        font-size: 20px;
-        display: inline;
-        vertical-align: central;
-    }
+.LinkBar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
 
+.LinkBar a:hover {
+    background-color: #ddd;
+    color: black;
+}
 
 .BodyDiv {
-
-    position: relative;
-    width: calc(100% - 40px);
-    height: 600px;
-    display: inline-block;
-    background: grey;
-    padding: 20px 30px;
+    text-align: center;
     margin: 20px;
-    box-sizing: border-box;
-    align-self: center;
+}
+
+/* Forms */
+form {
+    margin: 20px auto;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+input[type="submit"] {
+    background-color: #007BFF;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.MotivationalSection {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.motivational-quote {
+    font-size: 36px; 
+    font-weight: 700; 
+    color: #2d3e50; 
+    text-align: center;
+    background: linear-gradient(45deg, #ff6f61, #fbc2eb); 
+    color: white; 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+    transform: scale(1.1); 
+    transition: transform 0.3s ease, background-color 0.3s ease; 
+}
+
+.motivational-quote:hover {
+    transform: scale(1.2); 
+    background-color: #ff6f61;
 }
 
 
-
-h1 {
-    color: black;
-    font-family: serif;
-    font-size: 30px;
+.motivational-img {
+    width: 100%; 
+    max-width: 500px; 
+    height: auto; 
+    border-radius: 10px; 
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
-h2 {
-    color: black;
-    font-family: serif;
-    font-size: 24px;
-}
+/* Mobile Responsive */
+@media screen and (max-width: 768px) {
+    .motivational-quote {
+        font-size: 28px; 
+        padding: 15px;
+    }
 
-h3 {
-    color: black;
-    font-family: serif;
-    font-size: 18px;
-}
-
-
-p {
-    color: black;
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 18px;
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
-
-body {
-
-
-
+    .motivational-img {
+        max-width: 100%; 
+    }
 }

@@ -6,24 +6,28 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="{% static 'Landing/Landing.css' %}" />
     <title>Fitness Home Page</title>
-
 </head>
 <body>
 
     <div class="HeaderDiv">
         <h1>StriveOn</h1>
-        <h2>Login</h2>
     </div>
 
     <div class="LinkBar">
-        <p>Links to other pages:</p>
         <p><a href="{% url 'Landing:how_it_works' %}">How It Works</a></p>
         <p><a href="{% url 'Landing:login_signup' %}">Login/Sign Up</a></p>
     </div>
 
     <div class="BodyDiv">
-        <h1>Website Description and Info Before Login</h1>
-        <p>Welcome to StriveOn. Get started on your fitness journey today!</p>
+        <div class="TextAndImage">
+            <div class="Text">
+                <h1>SAY HELLO TO THE #1 FITNESS TRACKER APP PLATFORM</h1>
+                <p>Welcome to StriveOn, your personal fitness companion! Whether you're looking to track your daily activities, monitor your progress, or stay motivated, StriveOn helps you stay on top of your health goals. With easy-to-use features like activity logging, data visualizations, and insightful analytics, StriveOn makes it simple to track your journey and achieve your fitness aspirations. Start today and take control of your health!</p>
+            </div>
+            <div class="Image">
+                <img src="{% static 'Landing/homepic.jpg' %}" alt="Fitness Tracker" />
+            </div>
+        </div>
     </div>
 
 </body>
