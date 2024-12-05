@@ -77,6 +77,19 @@ def GetCountRenderQuery(u_id, workout_type, metrics):
     return df
 
 
+def GetAverageRenderQuery(u_id, workout_type, metrics):
+    
+    if(workout_type == 'All'): 
+        df = user_fitness_data.find({"user_id" : u_id['user_id']}).sort({"date" : -1})
+    else:
+        df = user_fitness_data.find({"user_id": u_id['user_id'], "workout_type": workout_type}).sort({"date" : -1}) #<---- change dict to a list of tuples
+        
+    df = pd.DataFrame((doc['date'], doc[metrics[0]]) for doc in df)
+    temp = pd.DataFrame(data=df.loc[::-1, 1]).rolling(7).mean()
+    df[1] = temp[1]
+    return df
+
+
 def RenderPlot(u_id, u_name, workout_type, metrics, agg_select):
     
     agg_name = {'date_agg' : 'Date', 'avg_agg' : '7 Day Average', 'count_agg' : 'Counts'}
