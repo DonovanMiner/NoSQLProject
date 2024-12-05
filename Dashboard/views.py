@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 
-#from pymongo import client_session
+from pymongo import client_session
 from bson.objectid import ObjectId
 from NoSQLProject.utils import user_fitness_data, users
 
@@ -15,9 +15,9 @@ import ast
 
 
 def FormatDate(date):
-
-    month_lookup = {'January': 1, 'February': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6, 'July': 7,
-                    'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12}
+    
+    month_lookup = {'January' : 1, 'February' : 2, 'March' : 3, 'April' : 4, 'May' : 5, 'June' : 6, 'July' : 7, 
+             'August' : 8, 'September' : 9, 'October' : 10, 'November' : 11, 'December' : 12}
 
     month, day, year = date.split(' ', 2)
     month = int(month_lookup[month])
@@ -25,13 +25,13 @@ def FormatDate(date):
     year = int(year)
 
     return datetime.datetime(year, month, day, 0, 0, 0)
+    
 
 
 def GetDateRenderQuery(u_id, workout_type, metrics):
-
+    
     print(f'UID QUERY DEBUG: {type(u_id)} {u_id}')
     print(f'GET QUERY DEBUG:\nWorkout: {workout_type}\nMetrics: {metrics}\n')
-<<<<<<< HEAD
     
     if(workout_type == 'All'):
         df = user_fitness_data.find({"user_id" : u_id['user_id']}).sort({"date" : -1})
@@ -44,60 +44,31 @@ def GetDateRenderQuery(u_id, workout_type, metrics):
         #df = pd.DataFrame(df)
         #df[1] = df[1] / (df[2]/60)
         #print(f'GET QUERY DATAFRAME CHECK:\n {df}')
-    if (workout_type == 'All'):
-        df = user_fitness_data.find(
-            {"user_id": u_id['user_id']}).sort({"date": -1})
-    else:
-        df = user_fitness_data.find({"user_id": u_id['user_id'], "workout_type": workout_type}).sort(
-            [("date", -1)])  # <---- change dict to a list of tuples
 
-=======
-
-    if (workout_type == 'All'):
-        df = user_fitness_data.find(
-            {"user_id": u_id['user_id']}).sort({"date": -1})
-    else:
-        df = user_fitness_data.find({"user_id": u_id['user_id'], "workout_type": workout_type}).sort(
-            [("date", -1)])  # <---- change dict to a list of tuples
-
->>>>>>> 9b0d603f4d9fd0e6ed01c5e6134b004bcbd6159a
-    if (len(metrics) == 1):
-        # add if statement for additional metrics in list, make metrics[0] x-axis/values other than date
-        df = [(doc['date'], doc[metrics[0]]) for doc in df]
-        return pd.DataFrame(df)
-        # df = pd.DataFrame(df)
-        # df[1] = df[1] / (df[2]/60)
-        # print(f'GET QUERY DATAFRAME CHECK:\n {df}')
-
-    elif (len(metrics) == 2):
-        df = user_fitness_data.find(
-            {'user_id': u_id['user_id'], 'workout_type': workout_type}).sort({'date': -1})
-        df = pd.DataFrame(
-            [[doc['date'], doc[metrics[0]], doc[metrics[1]]] for doc in df])
-        if (metrics[0] == 'active_minutes'):
+    elif(len(metrics) == 2):
+        df = user_fitness_data.find({'user_id' : u_id['user_id'], 'workout_type' : workout_type}).sort({'date' : -1})
+        df = pd.DataFrame([[doc['date'], doc[metrics[0]], doc[metrics[1]]] for doc in df])
+        if(metrics[0] == 'active_minutes'):
             df[1] = df[1] / 60
-        elif (metrics[1] == 'active_minutes'):
+        elif(metrics[1] == 'active_minutes'):
             df[2] = df[2] / 60
         print(f'DOUBLE METRICS CHECK:\n{df}')
-
+            
         df[1] = df[1] / df[2]
         return df
-
+        
 
 def GetCountRenderQuery(u_id, workout_type, metrics):
-
-    if (workout_type == 'All'):
-        df = user_fitness_data.aggregate([{"$match": {"user_id": u_id['user_id']}}, {'$group': {
-                                         '_id': f"${metrics[0]}", 'sumTotal': {'$sum': 1}}}, {"$sort": {'sumTotal': -1}}])
-    else:
-        df = user_fitness_data.aggregate([{"$match": {"user_id": u_id['user_id'], "workout_type": workout_type}}, {
-                                         '$group': {'_id': f"${metrics[0]}", 'sumTotal': {'$sum': 1}}}, {"$sort": {'sumTotal': -1}}])
+    
+    if(workout_type == 'All'):
+        df = user_fitness_data.aggregate([ {"$match" : {"user_id" : u_id['user_id']} }, {'$group' : {'_id' : f"${metrics[0]}", 'sumTotal' : {'$sum' : 1} } }, {"$sort" : {'sumTotal' : -1} } ])
+    else:    
+        df = user_fitness_data.aggregate([ {"$match" : {"user_id" : u_id['user_id'], "workout_type" : workout_type} }, {'$group' : {'_id' : f"${metrics[0]}", 'sumTotal' : {'$sum' : 1} } }, {"$sort" : {'sumTotal' : -1} } ])
 
     df = pd.DataFrame(doc for doc in df)
-    # print(f'DATAFRAME COUNT QUERY CHECK:\n{df}')
+    #print(f'DATAFRAME COUNT QUERY CHECK:\n{df}')
     return df
-
-<<<<<<< HEAD
+        
 
 def GetAverageRenderQuery(u_id, workout_type, metrics):
     
@@ -111,28 +82,25 @@ def GetAverageRenderQuery(u_id, workout_type, metrics):
     df[1] = temp[1]
     return df
 
-=======
->>>>>>> 9b0d603f4d9fd0e6ed01c5e6134b004bcbd6159a
 
 def RenderPlot(u_id, u_name, workout_type, metrics, agg_select):
+    
 
-    if (agg_select == 'date_agg'):
+    if(agg_select == 'date_agg'):
         df = GetDateRenderQuery(u_id, workout_type, metrics)
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=df[0], y=df[1]))
-        fig.update_layout(title=f'{u_name} Over Time for {
-                          workout_type}, {metrics}')
+        fig.update_layout(title=f'{u_name} Over Time for {workout_type}, {metrics}')
         fig.update_xaxes(title='Date')
         fig.update_yaxes(title=f'{metrics[0]}')
         fig = fig.to_html()
         return fig
 
-    elif (agg_select == 'count_agg'):
+    elif(agg_select == 'count_agg'):
         df = GetCountRenderQuery(u_id, workout_type, metrics)
         fig = go.Figure()
         fig.add_trace(go.Bar(x=df['_id'], y=df['sumTotal']))
-        fig.update_layout(title=f'{u_name} Counts for {
-                          workout_type}, {metrics}')
+        fig.update_layout(title=f'{u_name} Counts for {workout_type}, {metrics}')
         fig.update_xaxes(title=f'{metrics[0]}')
         fig.update_yaxes(title='Counts')
         fig = fig.to_html()
@@ -148,73 +116,72 @@ def RenderPlot(u_id, u_name, workout_type, metrics, agg_select):
         fig = fig.to_html()
         return fig
 
-def default_dashboard(request):
 
+
+def default_dashboard(request):
+    
     context = {}
 
     return HttpResponse(render(request, 'Dashboard/default_dashboard.html', context))
 
 
-def user_dashboard(request):
 
-    # get username/password and check it in database
-    # query u_id from u_nmae, pwd, put in context
+def user_dashboard(request):
+    
+    #get username/password and check it in database
+    #query u_id from u_nmae, pwd, put in context
     u_name = ''
     password = ''
     u_id = ''
 
-    if (request.POST.get('username')):
+    if(request.POST.get('username')):
         print('Here 1')
         u_name = request.POST.get('username')
         password = request.POST.get('password')
-        u_id = users.find_one({"u_name": u_name, "password": password}, {
-                              "_id": 0, "user_id": 1})
+        u_id = users.find_one({"u_name" : u_name, "password" : password}, {"_id" : 0, "user_id" : 1})
     else:
         print('Here 2')
         u_name = request.session.get('u_name')
         tmp = request.session.get('u_id')
-        u_id = {'user_id': tmp}
+        u_id = {'user_id' : tmp}
+        
 
     print(f'U_ID CHECK: {type(u_id)} {u_id}')
     print(f'UNAME CHECK: {type(u_name)} {u_name}')
     print(f'PASSWORD CHECK: {type(password)} {password}')
-
+   
     request.session['u_name'] = u_name
     request.session['u_id'] = u_id
 
-    init_workout_type = "Walking"
+    init_workout_type = "Walking" 
     init_metric = ["active_minutes"]
     init_agg_select = 'date_agg'
 
-    fig1 = RenderPlot(u_id, u_name, init_workout_type,
-                      init_metric, init_agg_select)
-    fig2 = RenderPlot(u_id, u_name, init_workout_type,
-                      init_metric, init_agg_select)
-    fig3 = RenderPlot(u_id, u_name, init_workout_type,
-                      init_metric, init_agg_select)
-    fig4 = RenderPlot(u_id, u_name, init_workout_type,
-                      init_metric, init_agg_select)
-
+    fig1 = RenderPlot(u_id, u_name, init_workout_type, init_metric, init_agg_select)
+    fig2 = RenderPlot(u_id, u_name, init_workout_type, init_metric, init_agg_select)
+    fig3 = RenderPlot(u_id, u_name, init_workout_type, init_metric, init_agg_select)
+    fig4 = RenderPlot(u_id, u_name, init_workout_type, init_metric, init_agg_select)
+    
     request.session['fig1'] = fig1
     request.session['fig2'] = fig2
     request.session['fig3'] = fig3
     request.session['fig4'] = fig4
-
-    context = {"u_id": u_id, "u_name": u_name, "fig1": fig1,
-               "fig2": fig2, "fig3": fig3, "fig4": fig4}
-
+    
+    context = {"u_id" : u_id, "u_name" : u_name, "fig1" : fig1, "fig2" : fig2, "fig3" : fig3, "fig4" : fig4}
+    
     return HttpResponse(render(request, 'Dashboard/user_dashboard.html', context))
 
 
-def update_user_dashboard(request):
 
-    # form info
+def update_user_dashboard(request):
+    
+    #form info
     # u_id = request.POST.get('u_id')
     # u_id = ast.literal_eval(u_id)
     # u_name = request.POST.get('u_name')
-    # print(f'U_ID UPDATE CHECK: {type(u_id)} {u_id}')
-
-    # session info
+    #print(f'U_ID UPDATE CHECK: {type(u_id)} {u_id}')
+    
+    #session info
     u_name = request.session.get('u_name')
     u_id = request.session.get('u_id')
 
@@ -222,108 +189,121 @@ def update_user_dashboard(request):
     workout_type_1, workout_type_2, workout_type_3, workout_type_4 = '', '', '', ''
     metric_1, metric_2, metric_3, metric_4 = ([] for i in range(4))
 
-    # get rest of info to query with
-    # need function to query data, return data frame to be passed to render graph
-    # put metrics into a list? 1st x-axis, 2nd y-axis, 3rd optional this per that
+    #get rest of info to query with
+    #need function to query data, return data frame to be passed to render graph
+    #put metrics into a list? 1st x-axis, 2nd y-axis, 3rd optional this per that
     if (request.method == "POST"):
         workout_type_1 = request.POST.get('workout_type_1')
         workout_type_2 = request.POST.get('workout_type_2')
         workout_type_3 = request.POST.get('workout_type_3')
         workout_type_4 = request.POST.get('workout_type_4')
 
-        metric_1.append(request.POST.get('metric_1_1'))
+        metric_1.append(request.POST.get('metric_1_1')) 
         metric_2.append(request.POST.get('metric_2_1'))
         metric_3.append(request.POST.get('metric_3_1'))
         metric_4.append(request.POST.get('metric_4_1'))
-        # print(f'FORM CHECK: {metric_1}')
-
+        #print(f'FORM CHECK: {metric_1}')
+        
         agg_select_1 = request.POST.get('agg_select_1')
         agg_select_2 = request.POST.get('agg_select_2')
         agg_select_3 = request.POST.get('agg_select_3')
         agg_select_4 = request.POST.get('agg_select_4')
-
-        if (request.POST.get('metric_1_2') != 'none'):
+        
+    
+        if(request.POST.get('metric_1_2') != 'none'):
             metric_1.append(request.POST.get('metric_1_2'))
-        if (request.POST.get('metric_2_2') != 'none'):
+        if(request.POST.get('metric_2_2') != 'none'):
             metric_2.append(request.POST.get('metric_2_2'))
-        if (request.POST.get('metric_3_2') != 'none'):
+        if(request.POST.get('metric_3_2') != 'none'):
             metric_3.append(request.POST.get('metric_3_2'))
-        if (request.POST.get('metric_4_2') != 'none'):
+        if(request.POST.get('metric_4_2') != 'none'):
             metric_4.append(request.POST.get('metric_4_2'))
-
-        # elif(agg_select == 'count_agg'):
+                
+        #elif(agg_select == 'count_agg'):
         #   print(f'COUNT AGG CHECK')
+
 
         fig1 = RenderPlot(u_id, u_name, workout_type_1, metric_1, agg_select_1)
         fig2 = RenderPlot(u_id, u_name, workout_type_2, metric_2, agg_select_2)
         fig3 = RenderPlot(u_id, u_name, workout_type_3, metric_3, agg_select_3)
         fig4 = RenderPlot(u_id, u_name, workout_type_4, metric_4, agg_select_4)
-
+ 
         request.session['fig1'] = fig1
         request.session['fig2'] = fig2
         request.session['fig3'] = fig3
         request.session['fig4'] = fig4
-
-        # request.session[''] =
+        
+        #request.session[''] = 
 
     else:
         fig1 = request.session.get('fig1')
         fig2 = request.session.get('fig2')
         fig3 = request.session.get('fig3')
         fig4 = request.session.get('fig4')
+       
+    
 
-    context = {"u_id": u_id, "u_name": u_name, "fig1": fig1,
-               "fig2": fig2, "fig3": fig3, "fig4": fig4}
+    context = {"u_id" : u_id, "u_name" : u_name, "fig1" : fig1, "fig2" : fig2, "fig3" : fig3, "fig4" : fig4}
 
     return HttpResponse(render(request, 'Dashboard/user_dashboard.html', context))
 
 
+
 def GetUpdateWorkoutQuery(u_id, search_by, search_query):
-
-    # lookup = {'date' : 'date', 'distance_km' : 'distance_km'}
-
-    if (search_by == '_id'):
+    
+    #lookup = {'date' : 'date', 'distance_km' : 'distance_km'}
+    
+    if(search_by == '_id'):
         search_query = ObjectId(f'{search_query}')
-    elif (search_by == 'date'):
+    elif(search_by == 'date'):
         search_query = FormatDate(search_query)
     else:
         try:
-            search_query = float(search_query)
+            search_query = float(search_query)    
         except ValueError:
-            pass
+            pass    
 
-    # print(f'U_ID CHECK: {u_id} {search_by} {type(search_query)} {search_query}')
-    ret_doc = user_fitness_data.find(
-        {"user_id": u_id['user_id'], str(search_by): search_query})
+    #print(f'U_ID CHECK: {u_id} {search_by} {type(search_query)} {search_query}')
+    ret_doc = user_fitness_data.find({"user_id" : u_id['user_id'], str(search_by) : search_query})
     return [doc for doc in ret_doc]
 
-    # print(f'FIN DOC CHECK:\n{docs}')
+    #print(f'FIN DOC CHECK:\n{docs}')
+    
+    
 
+
+    
 
 def update_workout(request):
-
+   
     u_name = request.session.get('u_name')
     u_id = request.session.get('u_id')
-    # print(f'U_ID CHECK: {type(u_id)} {u_id}')
-    # print(f'UNAME CHECK: {type(u_name)} {u_name}')
+    #print(f'U_ID CHECK: {type(u_id)} {u_id}')
+    #print(f'UNAME CHECK: {type(u_name)} {u_name}')
 
     docs = []
-    # df = [(doc['date'], doc[metrics[0]]) for doc in df]
-    if (request.method == "POST"):
-        # CACHE THE RETURNED LIST
+    # df = [(doc['date'], doc[metrics[0]]) for doc in df] 
+    if(request.method == "POST"):
+        #CACHE THE RETURNED LIST
         search_by = request.POST.get('search_by')
         search_query = request.POST.get('search_query')
         docs = GetUpdateWorkoutQuery(u_id, search_by, search_query)
 
-    context = {"u_id": u_id, "u_name": u_name, "docs": docs}
-
+    context = {"u_id" : u_id, "u_name" : u_name, "docs" : docs}
+    
     return HttpResponse(render(request, 'Dashboard/update_workout.html', context))
+ 
+
+
+
+
+
 
 
 def AddDocField(doc_id, field, value):
-
-    add_val = {"$set": {f'{field}': value}}
-    # print(add_val)
+   
+    add_val = {"$set" : {f'{field}' : value}}
+    #print(add_val)
 
     try:
         value = float(value)
@@ -333,21 +313,20 @@ def AddDocField(doc_id, field, value):
         except ValueError:
             pass
 
-    if (isinstance(value, str)):
+    if(isinstance(value, str)):
         value = value.strip()
-
-    user_fitness_data.update_one({'_id': ObjectId(doc_id)}, add_val)
+        
+    user_fitness_data.update_one({'_id' : ObjectId(doc_id)}, add_val)
 
 
 def RemoveDocField(doc_id, field):
-
-    user_fitness_data.update_one({'_id': ObjectId(doc_id)}, {
-                                 "$unset": {f'{field}': ""}})
-
+    
+    user_fitness_data.update_one({'_id' : ObjectId(doc_id)}, {"$unset" : {f'{field}' : "" }})
+    
 
 def DeleteWholeDoc(doc_id):
-
-    user_fitness_data.delete_one({'_id': ObjectId(doc_id)})
+    
+    user_fitness_data.delete_one({'_id' : ObjectId(doc_id)})
 
 
 def TrimObjID(doc):
@@ -355,19 +334,20 @@ def TrimObjID(doc):
     id_start = doc.find('(')
     id_stop = doc.find(')', id_start)
 
-    obj_id = doc[id_start+2: id_stop-1]
+    obj_id = doc[id_start+2 : id_stop-1]
 
     return obj_id
 
 
-def UpdateEditDoc(new_doc, doc_id):
 
-    update_vals = {"$set": {}}
+def UpdateEditDoc(new_doc, doc_id):
+    
+    update_vals = {"$set" : {}}
 
     for k, v in new_doc:
         if k != 'csrfmiddlewaretoken' and k != 'doc_id' and k != 'edit_delete_select':
-
-            if (k == 'date'):
+            
+            if(k == 'date'):
                 v = FormatDate(v)
             else:
                 try:
@@ -378,32 +358,32 @@ def UpdateEditDoc(new_doc, doc_id):
                     except ValueError:
                         pass
 
-                if (isinstance(v, str)):
+                if(isinstance(v, str)):
                     v = v.strip()
 
-            # print(f'Key: {k} {type(k)}')
-            # print(f'Value: {v} {type(v)}')
+            #print(f'Key: {k} {type(k)}')
+            #print(f'Value: {v} {type(v)}')
+            
+            update_vals['$set'].update({k : v})
+            
+    #print(f'UPDATE VALS CHECK: {update_vals}')
+    user_fitness_data.update_one({'_id' : ObjectId(doc_id)}, update_vals)
+    
+    #new_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
+    #print(f'NEW DOC CHECK: {new_doc}')
 
-            update_vals['$set'].update({k: v})
-
-    # print(f'UPDATE VALS CHECK: {update_vals}')
-    user_fitness_data.update_one({'_id': ObjectId(doc_id)}, update_vals)
-
-    # new_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
-    # print(f'NEW DOC CHECK: {new_doc}')
-
-    # make sure query updates doc correctly
+    #make sure query updates doc correctly
 
 
 def CreateNewDoc(doc_info, u_id):
-
+        
     insert_fields = {}
 
     for field, value in doc_info:
-
-        if (field != 'csrfmiddlewaretoken'):
-
-            if (field == 'date'):
+        
+        if(field != 'csrfmiddlewaretoken'):
+            
+            if(field == 'date'):
                 value = FormatDate(value)
             else:
                 try:
@@ -414,127 +394,135 @@ def CreateNewDoc(doc_info, u_id):
                     except ValueError:
                         pass
 
-                if (isinstance(value, str)):
+                if(isinstance(value, str)):
                     value = value.strip()
 
-            insert_fields.update({field: value})
-
-    insert_fields.update({'user_id': u_id['user_id']})
+            insert_fields.update({field : value})
+    
+         
+    insert_fields.update({'user_id' : u_id['user_id']})
     print(insert_fields)
     user_fitness_data.insert_one(insert_fields)
 
 
-def edit_workout(request):
 
+def edit_workout(request):
+    
     u_name = request.session.get('u_name')
     u_id = request.session.get('u_id')
+    
+    context = {"u_id" : u_id, "u_name" : u_name}
 
-    context = {"u_id": u_id, "u_name": u_name}
-
-    if (request.method == "POST"):
-
-        # try except here for only one value for created value
-        if (request.POST.get('created_field') and request.POST.get('created_value')):
+    if(request.method == "POST"):
+        
+        #try except here for only one value for created value
+        if(request.POST.get('created_field') and request.POST.get('created_value')):
             action = 'create_field'
             field = request.POST.get('created_field')
             value = request.POST.get('created_value')
-
-        elif (request.POST.get('remove_field')):
+            
+        elif(request.POST.get('remove_field')):
             action = 'remove_field'
             field = request.POST.get('remove_field')
 
         else:
             action = request.POST.get('edit_delete_select')
+        
 
         print(f'ACTION CHECK: {action}')
+        
 
-        if (action == 'edit'):
+        if(action == 'edit'):
             doc = request.POST.get('doc_info')
             obj_id = TrimObjID(doc)
-            doc = user_fitness_data.find_one({'_id': ObjectId(obj_id)})
-            doc_id = {'_id': doc['_id'], 'user_id': doc['user_id']}
+            doc = user_fitness_data.find_one({'_id' : ObjectId(obj_id)})
+            doc_id = {'_id' : doc['_id'], 'user_id' : doc['user_id']}
             del doc['_id']
             del doc['user_id']
+            
+            context.update({"action" : action})
+            context.update({"doc" : doc})
+            context.update({"doc_id" : doc_id})
+            
 
-            context.update({"action": action})
-            context.update({"doc": doc})
-            context.update({"doc_id": doc_id})
-
-        elif (action == 'update'):
+        elif(action == 'update'):
             doc_id = request.POST.get('doc_id')
             new_doc = request.POST.items()
-
+            
             doc_id = TrimObjID(doc_id)
             UpdateEditDoc(new_doc, doc_id)
-            # print(f'DOC ID: {doc_id}')
-            updated_doc = user_fitness_data.find_one({'_id': ObjectId(doc_id)})
-            doc_id = {'_id': updated_doc['_id'],
-                      'user_id': updated_doc['user_id']}
+            #print(f'DOC ID: {doc_id}')
+            updated_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
+            doc_id = {'_id' : updated_doc['_id'], 'user_id' : updated_doc['user_id']}
             del updated_doc['_id']
             del updated_doc['user_id']
+            
+            context.update({"action" : action})
+            context.update({"doc" : updated_doc})
+            context.update({"doc_id" : doc_id})
 
-            context.update({"action": action})
-            context.update({"doc": updated_doc})
-            context.update({"doc_id": doc_id})
 
-        elif (action == 'create_field'):
-            # CREATE WHOLE NEW DOCUMENT?
+        elif(action == 'create_field'):
+            #CREATE WHOLE NEW DOCUMENT?
             doc_id = request.POST.get('doc_id')
             doc_id = TrimObjID(doc_id)
-            # print(f'CREATE DOC CHECK: {type(doc_id)} {doc_id}')
-
+            #print(f'CREATE DOC CHECK: {type(doc_id)} {doc_id}') 
+            
             AddDocField(doc_id, field, value)
-
-            updated_doc = user_fitness_data.find_one({'_id': ObjectId(doc_id)})
-            doc_id = {'_id': updated_doc['_id'],
-                      'user_id': updated_doc['user_id']}
+            
+            updated_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
+            doc_id = {'_id' : updated_doc['_id'], 'user_id' : updated_doc['user_id']}
             del updated_doc['_id']
             del updated_doc['user_id']
+            
+            context.update({"action" : action})
+            context.update({"doc" : updated_doc})
+            context.update({"doc_id" : doc_id})
 
-            context.update({"action": action})
-            context.update({"doc": updated_doc})
-            context.update({"doc_id": doc_id})
-
-        elif (action == 'delete'):
-
+        elif(action == 'delete'):
+            
             try:
                 doc_id = request.POST.get('doc_id')
             except:
                 doc_info = request.POST.get('doc_info')
                 doc_id = TrimObjID(doc)
-
+                
             DeleteWholeDoc(doc_id)
-
-            context.update({"action": action})
-
-        elif (action == 'remove_field'):
+            
+            context.update({"action" : action})
+        
+        elif(action == 'remove_field'):
             doc_id = request.POST.get('doc_id')
             doc_id = TrimObjID(doc_id)
-
+            
             RemoveDocField(doc_id, field)
-
-            updated_doc = user_fitness_data.find_one({'_id': ObjectId(doc_id)})
-            doc_id = {'_id': updated_doc['_id'],
-                      'user_id': updated_doc['user_id']}
+            
+            updated_doc = user_fitness_data.find_one({'_id' : ObjectId(doc_id)})
+            doc_id = {'_id' : updated_doc['_id'], 'user_id' : updated_doc['user_id']}
             del updated_doc['_id']
             del updated_doc['user_id']
-
-            context.update({"action": action})
-            context.update({"doc": updated_doc})
-            context.update({"doc_id": doc_id})
+            
+            context.update({"action" : action})
+            context.update({"doc" : updated_doc})
+            context.update({"doc_id" : doc_id})
+            
 
     return HttpResponse(render(request, 'Dashboard/edit_workout.html', context))
+
+
+
 
 
 def create_workout(request):
 
     u_name = request.session.get('u_name')
     u_id = request.session.get('u_id')
-    context = {"u_id": u_id, "u_name": u_name}
-
-    if (request.method == 'POST'):
-
-        doc_info = request.POST.items()
-        CreateNewDoc(doc_info, u_id)
+    context = {"u_id" : u_id, "u_name" : u_name}
+    
+    if(request.method == 'POST'):
+        
+       doc_info = request.POST.items()
+       CreateNewDoc(doc_info, u_id)
 
     return HttpResponse(render(request, 'Dashboard/create_workout.html', context))
+    
