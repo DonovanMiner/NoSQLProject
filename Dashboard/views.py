@@ -36,7 +36,7 @@ def GetDateRenderQuery(u_id, workout_type, metrics):
     if(workout_type == 'All'):
         df = user_fitness_data.find({"user_id" : u_id['user_id']}).sort({"date" : -1})
     else:
-        df = user_fitness_data.find({"user_id": u_id['user_id'], "workout_type": workout_type}).sort([("date", -1)]) #<---- change dict to a list of tuples
+        df = user_fitness_data.find({"user_id": u_id['user_id'], "workout_type": workout_type}).sort({"date" : -1}) #<---- change dict to a list of tuples
     
     if(len(metrics) == 1):
         df = [(doc['date'], doc[metrics[0]]) for doc in df] #add if statement for additional metrics in list, make metrics[0] x-axis/values other than date 
@@ -70,6 +70,19 @@ def GetCountRenderQuery(u_id, workout_type, metrics):
     return df
         
 
+def GetAverageRenderQuery(u_id, workout_type, metrics):
+    
+    if(workout_type == 'All'): 
+        df = user_fitness_data.find({"user_id" : u_id['user_id']}).sort({"date" : -1})
+    else:
+        df = user_fitness_data.find({"user_id": u_id['user_id'], "workout_type": workout_type}).sort({"date" : -1}) #<---- change dict to a list of tuples
+        
+    df = pd.DataFrame((doc['date'], doc[metrics[0]]) for doc in df)
+    temp = pd.DataFrame(data=df.loc[::-1, 1]).rolling(7).mean()
+    df[1] = temp[1]
+    return df
+
+
 def RenderPlot(u_id, u_name, workout_type, metrics, agg_select):
     
 
@@ -90,6 +103,16 @@ def RenderPlot(u_id, u_name, workout_type, metrics, agg_select):
         fig.update_layout(title=f'{u_name} Counts for {workout_type}, {metrics}')
         fig.update_xaxes(title=f'{metrics[0]}')
         fig.update_yaxes(title='Counts')
+        fig = fig.to_html()
+        return fig
+    
+    elif(agg_select == 'avg_agg'):
+        df = GetAverageRenderQuery(u_id, workout_type, metrics)
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=df[0], y=df[1]))
+        fig.update_layout(title=f'{u_name} Weekly Average for {workout_type}, {metrics}')
+        fig.update_xaxes(title='Date')
+        fig.update_yaxes(title=f'{metrics[0]}')
         fig = fig.to_html()
         return fig
 
