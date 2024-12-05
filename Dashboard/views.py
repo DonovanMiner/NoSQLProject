@@ -408,7 +408,6 @@ def update_workout(request):
 
     return HttpResponse(render(request, 'Dashboard/update_workout.html', context))
 
-
 def AddDocField(doc_id, field, value):
 
     add_val = {"$set": {f'{field}': value}}

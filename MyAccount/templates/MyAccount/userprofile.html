@@ -20,16 +20,16 @@
     </div>
 
     <div class="ProfileContent">
-        <h2>Your Profile</h2>
 
         <!-- Display user information -->
         <div class="BodyDiv">
+            <h1>Your Profile</h1>
             <h2>Hello {{ user.f_name }} {{ user.l_name }}</h2>
             
             <!-- Displaying basic user information -->
             <p><strong>Name:</strong> {{ user.f_name }}</p>
             <p><strong>Last Name:</strong>{{ user.l_name }}</p>
-            <p><strong>Username:</strong> {{ user.u_name }}</p>n
+            <p><strong>Username:</strong> {{ user.u_name }}</p>
             <p><strong>Birthday:</strong> {{ user.dob }}</p>
             <p><strong>Gender:</strong> {{ user.gender }}</p>  
         </div>    
@@ -44,10 +44,6 @@
             </form>
         </div>
 
-    </div>
-
-    <div class="FooterDiv">
-        <p>&copy; 2024 Your Website</p>
     </div>
 
 </body>
