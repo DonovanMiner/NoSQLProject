@@ -12,20 +12,18 @@ from NoSQLProject.utils import users  # , user_fitness_data
 
 # Profile Settings View
 def userprofile(request):
-    # Get the user_id or username from the session
-    # Assuming you stored the user_id during login
-    user_id = request.session.get("user_id")
+    # Retrieve the user_id from session
+    user_id = request.session.get("u_id")
     if not user_id:
-        # If no user_id in session, the user is not logged in
         return HttpResponse("User is not logged in.", status=401)
 
-    # Fetch user data from MongoDB using the user_id
+    # Fetch user data from MongoDB
     user = users.find_one({"_id": ObjectId(user_id)})
 
     if not user:
         return HttpResponse("User not found.", status=404)
 
-    # Pass the user data to the template
+    # Pass user data to the template
     return render(request, 'MyAccount/userprofile.html', {'user': user})
 
 
