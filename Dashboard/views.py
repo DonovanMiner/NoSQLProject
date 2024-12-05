@@ -100,8 +100,6 @@ def RenderPlot(u_id, u_name, workout_type, metrics, agg_select):
         df = GetDateRenderQuery(u_id, workout_type, metrics)
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=df[0], y=df[1]))
-        fig.update_layout(title=f'{u_name} Over Time for {
-                          workout_type}, {metrics}')
         fig.update_xaxes(title='Date')
         fig.update_yaxes(title=f'{metrics[0]}')
         
@@ -117,8 +115,6 @@ def RenderPlot(u_id, u_name, workout_type, metrics, agg_select):
         df = GetCountRenderQuery(u_id, workout_type, metrics)
         fig = go.Figure()
         fig.add_trace(go.Bar(x=df['_id'], y=df['sumTotal']))
-        fig.update_layout(title=f'{u_name} Counts for {
-                          workout_type}, {metrics}')
         fig.update_xaxes(title=f'{metrics[0]}')
         fig.update_yaxes(title='Counts')
         
@@ -272,8 +268,7 @@ def user_dashboard(request):
     request.session['fig3'] = fig3
     request.session['fig4'] = fig4
 
-    context = {"u_id": u_id, "u_name": u_name, "fig1": fig1,
-               "fig2": fig2, "fig3": fig3, "fig4": fig4}
+    context = {"u_id": u_id, "u_name": u_name, "fig1": fig1, "fig2": fig2, "fig3": fig3, "fig4": fig4}
 
     return HttpResponse(render(request, 'Dashboard/user_dashboard.html', context))
 
@@ -360,18 +355,15 @@ def update_user_dashboard(request):
         mm_4 = list(mm_4)[:1]
 
         MOTIVATION = GET_MOTIVATED(u_id, workout_type_1, workout_type_2, workout_type_3, workout_type_4, mm_1, mm_2, mm_3, mm_4)
-        print(f'MOTIV CHECK: {MOTIVATION}')
-
-        # request.session[''] =
+        #print(f'MOTIV CHECK: {MOTIVATION}')
 
     else:
         fig1 = request.session.get('fig1')
         fig2 = request.session.get('fig2')
         fig3 = request.session.get('fig3')
         fig4 = request.session.get('fig4')
+        
     context = {"u_id" : u_id, "u_name" : u_name, "fig1" : fig1, "fig2" : fig2, "fig3" : fig3, "fig4" : fig4, "MOTIVATION" : MOTIVATION}
-    context = {"u_id": u_id, "u_name": u_name, "fig1": fig1,
-               "fig2": fig2, "fig3": fig3, "fig4": fig4}
 
     return HttpResponse(render(request, 'Dashboard/user_dashboard.html', context))
 
