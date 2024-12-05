@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings</title>
+    <link rel="stylesheet" href="{% static 'MyAccount/myaccount.css' %}">
+</head>
+<body>
+
+    <div class="HeaderDiv">
+        <h1>USER PROFILE</h1>
+    </div>
+
+    <div class="LinkBar">
+        <p><a href="{% url 'MyAccount:settings' %}">Settings</a></p>
+        <p><a href="{% url 'Dashboard:update_user_dash' %}">Dashboard</a></p>
+        <p><a href="{% url 'Landing:home' %}">Log Out</a></p>
+    </div>
+
+    <div class="ProfileContent">
+        <h2>Your Profile</h2>
+
+        <!-- Display user information -->
+        <div class="BodyDiv">
+            <h2>Hello {{ user.f_name }} {{ user.l_name }}</h2>
+            
+            <!-- Displaying basic user information -->
+            <p><strong>Name:</strong> {{ user.f_name }} {{ user.l_name }}</p>
+            <p><strong>Username:</strong> {{ user.u_name }}</p>n
+            <p><strong>Birthday:</strong> {{ user.dob }}</p>
+            <p><strong>Gender:</strong> {{ user.gender }}</p>    
+    </div>
+
+    <div class="FooterDiv">
+        <p>&copy; 2024 Your Website</p>
+    </div>
+
+</body>
+</html>

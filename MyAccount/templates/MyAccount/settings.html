@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings</title>
+    <link rel="stylesheet" href="{% static 'MyAccount/myaccount.css' %}">
+</head>
+<body>
+
+    <div class="HeaderDiv">
+        <h1>USER PROFILE</h1>
+    </div>
+
+    <div class="LinkBar">
+        <p><a href="{% url 'MyAccount:userprofile' %}">User Profile</a></p>
+        <p><a href="{% url 'Dashboard:update_user_dash' %}">Dashboard</a></p>
+        <p><a href="{% url 'Landing:home' %}">Log Out</a></p>
