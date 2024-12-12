@@ -100,6 +100,20 @@
                     </div>
                 </div>
 
+                <!-- Modal structure for username change -->
+                <div id="usernameModal" class="modal" style="display:none;">
+                    <div class="modal-content">
+                        <span class="close-btn" onclick="closeUsernameModal()">&times;</span>
+                        <h3>Change Username</h3>
+                        <form method="POST" action="{% url 'MyAccount:update_username' %}">
+                            {% csrf_token %}
+                            <label for="new_username">New Username:</label>
+                            <input type="text" name="new_username" value="{{ user.u_name }}" required><br>
+                            <button type="submit">Update Username</button>
+                        </form>
+                    </div>
+                </div>
+
                 <!-- Editable Password section -->
                 <div class="PasswordSection">
                     <h3>Change Password</h3>
@@ -117,48 +131,59 @@
                     </div>
                 </div>
                 
+                <!-- Show the new password form after verifying current password -->
+                {% if update_password %}
+                <script>
+                    openNewPasswordForm();
+                </script>
+                {% endif %}
+
+                <!-- First Form: Enter Current Password (Modal Popup) -->
+                <div id="currentPasswordForm" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <h4>Enter Current Password</h4>
+                        <form method="POST" action="{% url 'MyAccount:verify_current_password' %}">
+                            {% csrf_token %}
+                            <label for="current_password">Current Password:</label>
+                            <input type="password" name="current_password" required><br>
+                            <button type="submit">Verify</button>
+                        </form>
+                        <div id="incorrectPasswordMessage">
+                            {% if messages %}
+                                {% for message in messages %}
+                                    {% if message.tags == 'password_error' %}
+                                        <p style="color: red;">{{ message }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <button type="button" onclick="closeCurrentPasswordForm()">Close</button>
+                    </div>
+                </div>
+
+                <!-- Second Form: Enter New Password (Modal Popup) -->
+                <div id="newPasswordForm" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <h4>Enter New Password</h4>
+                        <form method="POST" action="{% url 'MyAccount:update_password' %}">
+                            {% csrf_token %}
+                            <label for="new_password">New Password:</label>
+                            <input type="password" name="new_password" required><br>
+
+                            <label for="confirm_new_password">Confirm New Password:</label>
+                            <input type="password" name="confirm_new_password" required><br>
+
+                            <button type="submit">Change Password</button>
+                        </form>
+                        <button type="button" onclick="closeNewPasswordForm()">Close</button>
+                    </div>
+                </div>
 
             </div>
         </div>    
-            
-        <!-- Editable Bio Section
-        <div class="BioSection">
-            <h3>Bio</h3>
-            <form method="POST" action="{% url 'MyAccount:update_bio' %}">
-                {% csrf_token %}
-                <textarea name="bio" rows="4" cols="50">{{ user.bio|default:'' }}</textarea><br>
-                <button type="submit">Save Bio</button>
-            </form>
-            
-            <div id="bioSuccessMessage">
-                {% if messages %}
-                    {% for message in messages %}
-                        {% if message.tags == 'bio' %}
-                            <p style="color: green;">{{ message }}</p>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            </div>
-        </div> -->
-
-        <!-- Editable Username section -->
-        <!-- <div class="UsernameSection">
-            <h3>Update Username</h3>
-            <button id="changeUsernameBtn" onclick="openUsernameModal()">Change Username</button>
-
-            <div id="usernameSuccessMessage">
-                {% if messages %}
-                    {% for message in messages %}
-                        {% if message.tags == 'username' %}
-                            <p style="color: green;">{{ message }}</p>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            </div>
-        </div> -->
 
         <!-- Modal structure for username change -->
-        <div id="usernameModal" class="modal" style="display:none;">
+        <!-- <div id="usernameModal" class="modal" style="display:none;">
             <div class="modal-content">
                 <span class="close-btn" onclick="closeUsernameModal()">&times;</span>
                 <h3>Change Username</h3>
@@ -169,26 +194,10 @@
                     <button type="submit">Update Username</button>
                 </form>
             </div>
-        </div>
-
-        <!-- Editable Password section
-        <div class="PasswordSection">
-            <h3>Change Password</h3>
-            <button onclick="openCurrentPasswordForm()">Change Password</button>
-
-            <div id="passwordSuccessMessage">
-                {% if messages %}
-                    {% for message in messages %}
-                        {% if message.tags == 'password' %}
-                            <p style="color: green;">{{ message }}</p>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            </div>
         </div> -->
 
         <!-- First Form: Enter Current Password (Modal Popup) -->
-        <div id="currentPasswordForm" class="modal" style="display: none;">
+        <!-- <div id="currentPasswordForm" class="modal" style="display: none;">
             <div class="modal-content">
                 <h4>Enter Current Password</h4>
                 <form method="POST" action="{% url 'MyAccount:verify_current_password' %}">
@@ -208,10 +217,10 @@
                 </div>
                 <button type="button" onclick="closeCurrentPasswordForm()">Close</button>
             </div>
-        </div>
+        </div> -->
 
         <!-- Second Form: Enter New Password (Modal Popup) -->
-        <div id="newPasswordForm" class="modal" style="display: none;">
+        <!-- <div id="newPasswordForm" class="modal" style="display: none;">
             <div class="modal-content">
                 <h4>Enter New Password</h4>
                 <form method="POST" action="{% url 'MyAccount:update_password' %}">
@@ -226,7 +235,7 @@
                 </form>
                 <button type="button" onclick="closeNewPasswordForm()">Close</button>
             </div>
-        </div>
+        </div> -->
 
         <!-- CSS for Modal Popup Styling -->
         <style>

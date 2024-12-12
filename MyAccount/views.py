@@ -104,6 +104,32 @@ def update_username(request):
 
     return HttpResponse("Invalid request method.", status=400)
 
+def verify_current_password(request):
+    # Get the user_id from the session
+    user_id = request.session.get('u_id')
+
+    if not user_id:
+        return HttpResponse("User is not logged in.", status=401)
+
+    # Retrieve user data from MongoDB using the user_id
+    user = users.find_one({'user_id': user_id['user_id']})
+
+    if not user:
+        return HttpResponse("User not found.", status=404)
+
+    if request.method == 'POST':
+        current_password = request.POST.get('current_password')
+
+        # Check if the entered current password matches the stored password
+        if current_password != user['password']:
+            messages.error(request, "Current password is incorrect.", extra_tags='password')
+            return render(request, 'MyAccount/userprofile.html', {'user': user})
+
+        # If correct, show the new password form
+        return render(request, 'MyAccount/userprofile.html', {'update_password': True, 'user': user})
+
+    return HttpResponse("Invalid request method.", status=400)
+
 
 def update_password(request):
     # Get the user_id from the session
@@ -140,31 +166,5 @@ def update_password(request):
 
         messages.success(request, "Password updated successfully.", extra_tags='password')
         return redirect('MyAccount:userprofile')
-
-    return HttpResponse("Invalid request method.", status=400)
-
-def verify_current_password(request):
-    # Get the user_id from the session
-    user_id = request.session.get('u_id')
-
-    if not user_id:
-        return HttpResponse("User is not logged in.", status=401)
-
-    # Retrieve user data from MongoDB using the user_id
-    user = users.find_one({'user_id': user_id['user_id']})
-
-    if not user:
-        return HttpResponse("User not found.", status=404)
-
-    if request.method == 'POST':
-        current_password = request.POST.get('current_password')
-
-        # Check if the entered current password matches the stored password
-        if current_password != user['password']:
-            messages.error(request, "Current password is incorrect.", extra_tags='password')
-            return render(request, 'MyAccount/userprofile.html', {'user': user})
-
-        # If correct, show the new password form
-        return render(request, 'MyAccount/userprofile.html', {'show_new_password_form': True, 'user': user})
 
     return HttpResponse("Invalid request method.", status=400)
