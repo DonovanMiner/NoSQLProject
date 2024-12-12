@@ -84,7 +84,7 @@ input[type="submit"]:hover {
 }
 
 .motivational-quote {
-    font-size: 36px; 
+    font-size: 26px; 
     font-weight: 700; 
     color: #2d3e50; 
     text-align: center;
@@ -95,11 +95,6 @@ input[type="submit"]:hover {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
     transform: scale(1.1); 
     transition: transform 0.3s ease, background-color 0.3s ease; 
-}
-
-.motivational-quote:hover {
-    transform: scale(1.2); 
-    background-color: #ff6f61;
 }
 
 

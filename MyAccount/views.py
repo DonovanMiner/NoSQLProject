@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse
 from bson.objectid import ObjectId
+from bson import Binary
+
 
 
 from NoSQLProject.utils import users, user_fitness_data
@@ -52,7 +54,7 @@ def update_bio(request):
                 {'user_id': user_id['user_id']},
                 {'$set': {'bio': bio}}  # Set the bio field in the user's document
             )
-            messages.success(request, "Bio updated successfully!")
+            messages.success(request, "Bio updated successfully.", extra_tags='bio')
 
         # Fetch the updated user data and render the profile page with the new bio
         user = users.find_one({'user_id': user_id['user_id']})
@@ -60,7 +62,50 @@ def update_bio(request):
 
     return HttpResponse("Invalid request method.", status=400)
 
-def settings(request):
+def update_username(request):
+    # Get the user_id from the session
+    user_id = request.session.get('u_id')
+
+    # If user_id is not found, return a "User is not logged in" message
+    if not user_id:
+        return HttpResponse("User is not logged in.", status=401)
+
+    # Retrieve user data from MongoDB using the user_id
+    user = users.find_one({'user_id': user_id['user_id']})
+
+    if not user:
+        return HttpResponse("User not found.", status=404)
+
+    # Handle POST request to update the username
+    if request.method == 'POST':
+        new_username = request.POST.get('new_username')  # Get the new username from the form
+
+        # Check if new_username is provided
+        if new_username:
+            # Ensure the new username is not the same as the current username
+            if new_username == user['u_name']:
+                messages.error(request, "Username already exists. Please choose a different username.", extra_tags='username_error')
+            else:
+                # Check if the new username already exists in the database
+                existing_user = users.find_one({'u_name': new_username})
+                if existing_user:
+                    messages.error(request, "New username cannot be the same as the current username.", extra_tags='username_error')
+                else:
+                    # Update the user's username in MongoDB
+                    users.update_one(
+                        {'user_id': user_id['user_id']},
+                        {'$set': {'u_name': new_username}}  # Set the username field in the user's document
+                    )
+                    messages.success(request, "Username updated successfully.", extra_tags='username')
+
+        # Fetch the updated user data and render the profile page with the new username
+        user = users.find_one({'user_id': user_id['user_id']})
+        return render(request, 'MyAccount/userprofile.html', {'user': user})
+
+    return HttpResponse("Invalid request method.", status=400)
+
+
+def update_password(request):
     # Get the user_id from the session
     user_id = request.session.get('u_id')
 
@@ -73,115 +118,53 @@ def settings(request):
     if not user:
         return HttpResponse("User not found.", status=404)
 
-    # Pass user data to the template
-    return render(request, 'MyAccount/settings.html', {'user_id': user_id['user_id']})
-
-
-# View to update the user's profile (username and email)
-
-
-def update_profile(request):
-    user_id = request.session.get('u_id')
-
-    if not user_id:
-        return HttpResponse("User is not logged in.", status=401)
-
-    user = users.find_one({'user_id': user_id['user_id']})
-
-    if not user:
-        return HttpResponse("User not found.", status=404)
-
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-
-        # Check if the new username/email already exists
-        if username:
-            existing_user = users.find_one({'u_name': username})
-            if existing_user:
-                messages.error(request, "Username is already taken.")
-            else:
-                users.update_one({'user_id': user_id}, {'$set': {'u_name': username}})
-
-        if email:
-            existing_user = users.find_one({'email_addr': email})
-            if existing_user:
-                messages.error(request, "Email is already taken.")
-            else:
-                users.update_one({'user_id': user_id}, {'$set': {'email_addr': email}})
-
-        messages.success(request, "Profile updated successfully!")
-        return redirect('MyAccount:settings')
-
-    return render(request, 'MyAccount/settings.html', {'user_id': user_id['user_id']})
-
-# View to change the user's password
-
-
-def change_password(request):
-    user_id = request.session.get('u_id')
-
-    if not user_id:
-        return HttpResponse("User is not logged in.", status=401)
-
-    user = users.find_one({'user_id': user_id['user_id']})
-
-    if not user:
-        return HttpResponse("User not found.", status=404)
-
-    if request.method == 'POST':
-        old_password = request.POST.get('old_password')
         new_password = request.POST.get('new_password')
-        confirm_password = request.POST.get('confirm_password')
+        confirm_new_password = request.POST.get('confirm_new_password')
 
-        # Check if old password matches the current password
-        if old_password != user['password']:
-            return HttpResponse("Old password is incorrect.", status=400)
+        # Check if new password and confirmation match
+        if new_password != confirm_new_password:
+            messages.error(request, "New passwords do not match.", extra_tags='password_error')
+            return render(request, 'MyAccount/userprofile.html', {'user': user})
 
-        # Check password confirmation
-        if new_password and new_password == confirm_password:
-            # Update the password with the new value
-            users.update_one({'user_id': user_id}, {'$set': {'password': new_password}})
-            messages.success(request, "Password updated successfully!")
-        else:
-            if new_password != confirm_password:
-                return HttpResponse("Passwords do not match.", status=400)
+        # Check if new password is different from the current one
+        if new_password == user['password']:
+            messages.error(request, "New password cannot be the same as the current password.", extra_tags='password_error')
+            return render(request, 'MyAccount/userprofile.html', {'user': user})
 
-        # Redirect back to the settings page
-        return redirect('MyAccount:settings')
+        # Update the password in the database
+        users.update_one(
+            {'user_id': user_id['user_id']},
+            {'$set': {'password': new_password}}
+        )
 
-    return render(request, 'MyAccount/change_password.html')
+        messages.success(request, "Password updated successfully.", extra_tags='password')
+        return redirect('MyAccount:userprofile')
 
-# View to delete the user's account
+    return HttpResponse("Invalid request method.", status=400)
 
-
-def delete_account(request):
+def verify_current_password(request):
+    # Get the user_id from the session
     user_id = request.session.get('u_id')
 
     if not user_id:
         return HttpResponse("User is not logged in.", status=401)
 
+    # Retrieve user data from MongoDB using the user_id
+    user = users.find_one({'user_id': user_id['user_id']})
+
+    if not user:
+        return HttpResponse("User not found.", status=404)
+
     if request.method == 'POST':
-        delete_username = request.POST.get('delete_username')
-        delete_password = request.POST.get('delete_password')
+        current_password = request.POST.get('current_password')
 
-        user = users.find_one({'user_id': user_id['user_id']})
+        # Check if the entered current password matches the stored password
+        if current_password != user['password']:
+            messages.error(request, "Current password is incorrect.", extra_tags='password')
+            return render(request, 'MyAccount/userprofile.html', {'user': user})
 
-        if not user:
-            return HttpResponse("User not found.", status=404)
-
-        # Check if the username and password match for confirmation
-        if delete_username != user['u_name'] or delete_password != user['password']:
-            return HttpResponse("Username or password is incorrect.", status=400)
-
-        # Delete the user's related fitness data and the user document
-        user_fitness_data.delete_many({'user_id': user_id['user_id']})
-        users.delete_one({'user_id': user_id['user_id']})  
-
-        # Optionally log the user out after deletion
-        request.session.flush()  # Clear session data
-
-        # Redirect to the home page or a confirmation page
-        return redirect('Landing:home')
+        # If correct, show the new password form
+        return render(request, 'MyAccount/userprofile.html', {'show_new_password_form': True, 'user': user})
 
     return HttpResponse("Invalid request method.", status=400)

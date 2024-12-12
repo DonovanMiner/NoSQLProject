@@ -5,12 +5,8 @@ app_name = 'MyAccount'
 
 urlpatterns = [
     path('', views.userprofile, name='userprofile'),
-    path('settings/', views.settings, name='settings'),
     path('update_bio/', views.update_bio, name='update_bio'),
-    # For updating username and email
-    path('update_profile/', views.update_profile, name='update_profile'),
-    path('change_password/', views.change_password,
-         name='change_password'),  # For changing the password
-    path('delete_account/', views.delete_account,
-         name='delete_account'),  # For deleting the account
+    path('update_username/', views.update_username, name='update_username'),
+    path('verify_current_password/', views.verify_current_password, name='verify_current_password'),
+    path('update_password/', views.update_password, name='update_password'),
 ]
