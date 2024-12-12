@@ -65,7 +65,7 @@
             <div class="settings-panel-right">
                 <!-- Editable Bio Section -->
                 <div class="BioSection">
-                    <h3>Bio</h3>
+                    <h1>Latest Update!</h1>
                     <form method="POST" action="{% url 'MyAccount:update_bio' %}">
                         {% csrf_token %}
                         <textarea name="bio" rows="4" cols="50">{{ user.bio|default:'' }}</textarea><br>
