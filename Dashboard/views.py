@@ -381,8 +381,7 @@ def GetUpdateWorkoutQuery(u_id, search_by, search_query):
             pass
 
     # print(f'U_ID CHECK: {u_id} {search_by} {type(search_query)} {search_query}')
-    ret_doc = user_fitness_data.find(
-        {"user_id": u_id['user_id'], str(search_by): search_query})
+    ret_doc = user_fitness_data.find({"user_id": u_id['user_id'], str(search_by): search_query})
     return [doc for doc in ret_doc]
 
     # print(f'FIN DOC CHECK:\n{docs}')
@@ -402,6 +401,7 @@ def update_workout(request):
         search_by = request.POST.get('search_by')
         search_query = request.POST.get('search_query')
         docs = GetUpdateWorkoutQuery(u_id, search_by, search_query)
+        print(f'Doc Check: {docs}')
 
     context = {"u_id": u_id, "u_name": u_name, "docs": docs}
 
@@ -428,8 +428,7 @@ def AddDocField(doc_id, field, value):
 
 def RemoveDocField(doc_id, field):
 
-    user_fitness_data.update_one({'_id': ObjectId(doc_id)}, {
-                                 "$unset": {f'{field}': ""}})
+    user_fitness_data.update_one({'_id': ObjectId(doc_id)}, {"$unset": {f'{field}': ""}})
 
 
 def DeleteWholeDoc(doc_id):
@@ -519,7 +518,7 @@ def edit_workout(request):
     context = {"u_id": u_id, "u_name": u_name}
 
     if (request.method == "POST"):
-
+        
         # try except here for only one value for created value
         if (request.POST.get('created_field') and request.POST.get('created_value')):
             action = 'create_field'
@@ -555,8 +554,7 @@ def edit_workout(request):
             UpdateEditDoc(new_doc, doc_id)
             # print(f'DOC ID: {doc_id}')
             updated_doc = user_fitness_data.find_one({'_id': ObjectId(doc_id)})
-            doc_id = {'_id': updated_doc['_id'],
-                      'user_id': updated_doc['user_id']}
+            doc_id = {'_id': updated_doc['_id'], 'user_id': updated_doc['user_id']}
             del updated_doc['_id']
             del updated_doc['user_id']
 
@@ -583,12 +581,10 @@ def edit_workout(request):
             context.update({"doc_id": doc_id})
 
         elif (action == 'delete'):
-
-            try:
-                doc_id = request.POST.get('doc_id')
-            except:
-                doc_info = request.POST.get('doc_info')
-                doc_id = TrimObjID(doc)
+            doc_id = request.POST.get('doc_id')
+            #print(type(doc_id))
+            #print(doc_id)
+            doc_id = TrimObjID(doc_id)
 
             DeleteWholeDoc(doc_id)
 
@@ -601,8 +597,7 @@ def edit_workout(request):
             RemoveDocField(doc_id, field)
 
             updated_doc = user_fitness_data.find_one({'_id': ObjectId(doc_id)})
-            doc_id = {'_id': updated_doc['_id'],
-                      'user_id': updated_doc['user_id']}
+            doc_id = {'_id': updated_doc['_id'], 'user_id': updated_doc['user_id']}
             del updated_doc['_id']
             del updated_doc['user_id']
 
