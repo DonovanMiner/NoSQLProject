@@ -39,7 +39,7 @@
 /* Forms */
 form {
     margin: 20px auto;
-    max-width: 400px;
+    max-width: 500px;
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
@@ -60,22 +60,22 @@ input, select, button {
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: orange;
     color: white;
     font-size: 16px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: orange;
 }
 
 input[type="submit"] {
-    background-color: #007BFF;
+    background-color: orange;
 }
 
 input[type="submit"]:hover {
-    background-color: #0056b3;
+    background-color: orange;
 }
 
 .MotivationalSection {

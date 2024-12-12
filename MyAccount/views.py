@@ -89,7 +89,7 @@ def update_username(request):
                 # Check if the new username already exists in the database
                 existing_user = users.find_one({'u_name': new_username})
                 if existing_user:
-                    messages.error(request, "New username cannot be the same as the current username.", extra_tags='username_error')
+                    messages.error(request, "Username not available. try with a different username.", extra_tags='username_error')
                 else:
                     # Update the user's username in MongoDB
                     users.update_one(

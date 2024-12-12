@@ -16,7 +16,10 @@
 </head>
 <body>
 
-    <div class="HeaderDiv">
+    <div class="custom-header-div-login" style="background-color: orange;
+    color: white;
+    text-align: center;
+    padding: 20px;">
         <h1>StriveOn - Login / Sign Up</h1>
     </div>
 
@@ -26,18 +29,18 @@
     </div>
 
     <div class="BodyDiv">
-        <button onclick="showForm('loginForm')">Login</button>
-        <button onclick="showForm('signupForm')">Sign Up</button>
+        <button style="background-color: orange" onclick="showForm('loginForm')">Login</button>
+        <button style="background-color: orange" onclick="showForm('signupForm')">Sign Up</button>
         
         <!---LOGIN FORM-->
         <div id="loginForm" style="display: block;">
             <h2>Login to Your Account</h2>
             <form method="post" action="{% url 'Dashboard:user_dash' %}">
                 {% csrf_token %}
-                <label for="username">Username:</label>
+                <label for="username" style="width:90% !important;">Username:</label>
                 <input type="text" id="username" name="username" required />
 
-                <label for="password">Password:</label>
+                <label for="password" style="width:90%;">Password:</label>
                 <input type="password" id="password" name="password" required />
 
                 <input type="submit" value="Submit" />
@@ -99,7 +102,7 @@
           font-weight: 700; 
           color: white; 
           text-align: center; 
-          background: linear-gradient(45deg, #000000, #ec6e00); 
+          background: linear-gradient(45deg, #000000, orange); 
           padding: 20px; 
           border-radius: 10px; 
           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
