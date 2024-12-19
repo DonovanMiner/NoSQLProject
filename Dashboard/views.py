@@ -307,16 +307,6 @@ def update_user_dashboard(request):
         agg_select_2 = request.POST.get('agg_select_2')
         agg_select_3 = request.POST.get('agg_select_3')
         agg_select_4 = request.POST.get('agg_select_4')
-        
-    
-        if(request.POST.get('metric_1_2') != 'none'):
-            metric_1.append(request.POST.get('metric_1_2'))
-        if(request.POST.get('metric_2_2') != 'none'):
-            metric_2.append(request.POST.get('metric_2_2'))
-        if(request.POST.get('metric_3_2') != 'none'):
-            metric_3.append(request.POST.get('metric_3_2'))
-        if(request.POST.get('metric_4_2') != 'none'):
-            metric_4.append(request.POST.get('metric_4_2'))
                 
 
         if (request.POST.get('metric_1_2') != 'none'):
